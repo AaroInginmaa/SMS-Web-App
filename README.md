@@ -7,6 +7,7 @@ A web app to forward messages from web to [SMS Server Tools 3](http://smstools3.
 First create a directory for the app
 ```
 mkdir yourdirectory
+cd ./yourdirectory/
 ```
 then clone the repo
 ```
