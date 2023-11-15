@@ -3,25 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <script src="../index.js"></script>
-    <title>Form</title>
+    <title>Document</title>
+    <script src="interact.js"></script>
 </head>
 <body>
-    <div class="container">
-        <form onsubmit="return false">
-            <p>
-                <label for="phone">Phone number:</label>
-                <input type="number" name="phone" id="phone">
-            </p>
-            <p>
-                <label for="msg">Message:</label>
-                <input type="text" name="msg" id="msg">
-            </p>
-            <p>
-                <input type="button" id="btnSend" value="Send">
-            </p>
-        </form>
-    </div>
+    <form onsubmit="return false">
+        <input type="number" name="phone" id="phone">
+        <input type="text" name="msg" id="msg">
+        <button id="sendBtn">Send</button>
+    </form>
 </body>
 </html>

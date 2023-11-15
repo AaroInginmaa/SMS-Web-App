@@ -1,29 +1,26 @@
 window.onload = function() {
-    btn = document.getElementById('btnSend');
-    btn.addEventListener("click", sendsms);
+    let sendBtn = document.getElementById('sendBtn');
+    sendBtn.addEventListener("click", send);
 }
 
-function makeid(length) {
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const charactersLength = characters.length;
-    let counter = 0;
-    while (counter < length) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-      counter += 1;
-    }
-    return result;
-}
+function send() {
+    let data = {
+        phone: document.getElementById('phone').value,
+        msg: document.getElementById('msg').value
+    };
 
-function sendsms() {
-    let phone = document.getElementById('phone').value;
-    let msg = document.getElementById('msg').value;
-
-    let filepath = "/var/spool/sms/outgoing/"
-    let filename = makeid(8);
-    let filecontents = "To: ${phone}\nFlash: yes\nAlphabet: ISO\n ${msg}";
-
-    console.log(filename);
-
-    fs.writeFile(filepath + filename, filecontents);
+    fetch('/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        console.log(result);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 }
