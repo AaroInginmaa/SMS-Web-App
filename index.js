@@ -27,13 +27,7 @@ function makeid(length) {
 }
 
 function sendsms() {
-  const path = require('path');
-  
-  const getRootDir = () => path.parse(process.cwd()).root;
-  console.log(getRootDir());
-  
-  
-  let filepath = getRootDir() + "/var/spool/sms/outgoing/"
+  let filepath = "/var/spool/sms/outgoing/"
   let filename = makeid(8);
   let filecontents = "To: 0443642653\nFlash: yes\nAlphabet: ISO\n Test message";
   
