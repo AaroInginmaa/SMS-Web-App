@@ -1,6 +1,6 @@
-function getValues() {
-    let phone = document.getElementById('phone').value;
-    let msg = document.getElementById('msg').value;    
+window.onload = function() {
+    btn = document.getElementById('btnSend');
+    btn.addEventListener("click", sendsms);
 }
 
 function makeid(length) {
