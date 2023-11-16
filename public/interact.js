@@ -1,5 +1,5 @@
 window.onload = function() {
-    let sendBtn = document.getElementById('sendBtn');
+    let sendBtn = document.getElementById('submit');
     sendBtn.addEventListener("click", send);
 }
 
@@ -9,7 +9,7 @@ function send() {
         msg: document.getElementById('msg').value
     };
 
-    fetch('/', {
+    fetch('/test', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -21,6 +21,6 @@ function send() {
         console.log(result);
     })
     .catch(error => {
-        console.error('Error:', error);
+        console.error(error);
     });
 }

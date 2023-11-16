@@ -16,14 +16,18 @@ app.get('/', (req, res) => {
 });
 
 app.post('/', (req, res) => {
-		const receivedData = req.body;
-		console.log(receivedData);
-		const { phone, msg } = req.body;
+	const receivedData = req.body;
+	console.log(receivedData);
+	const { phone, msg } = req.body;
 
+	if(sendsms(phone, msg))
+	{
 		// Process the data as needed
-		res.json({ status: 'Data received successfully' });
-
-		sendsms(phone, msg);
+		res.json({status: 'Data received successfully'});
+	}
+	else {
+		res.json({message: 'An error occurred'});
+	}
 });
 
 app.listen(port, () => {
@@ -48,12 +52,19 @@ function sendsms(phone, msg) {
 	const filepath = outpath + filename;
 	const filecontents = "To: " + phone + "\nAlphabet: ISO\n\n" + msg;
 
-	console.log(fullname);
+	console.log(`File directory: ${outpath}`);
+	console.log(`File name: ${filename}`);
+	console.log(`Path: ${filepath}`);
+	
+	if (!fs.existsSync(outpath)) { console.log(`ERROR: directory ${outpath} does not exist`); return 1;}
 
 	try {
 		fs.writeFileSync(filepath, filecontents);
 		console.log('File written successfully.');
 	} catch (error) {
 		console.error('Error writing file:', error);
+		return 1;
 	}
+
+	return 0;
 }
