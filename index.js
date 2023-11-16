@@ -15,19 +15,16 @@ app.get('/', (req, res) => {
 	res.sendFile(__dirname + '/public/index.html');
 });
 
+
 app.post('/', (req, res) => {
 	const receivedData = req.body;
 	console.log(receivedData);
 	const { phone, msg } = req.body;
+	
+	// Process the data as needed
+	res.json({status: 'Data received successfully'});
 
-	if(sendsms(phone, msg))
-	{
-		// Process the data as needed
-		res.json({status: 'Data received successfully'});
-	}
-	else {
-		res.json({message: 'An error occurred'});
-	}
+	sendsms(phone, msg);
 });
 
 app.listen(port, () => {

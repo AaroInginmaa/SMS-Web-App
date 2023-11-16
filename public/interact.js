@@ -9,7 +9,7 @@ function send() {
         msg: document.getElementById('msg').value
     };
 
-    fetch('/test', {
+    fetch('/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
