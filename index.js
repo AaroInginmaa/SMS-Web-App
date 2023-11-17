@@ -23,9 +23,16 @@ app.post('/', (req, res) => {
 	const { phone, msg } = req.body;
 	
 	// Process the data as needed
-	res.json({status: 'Data received successfully'});
+	//res.json({status: 'Data received successfully'});
 
-	sendsms(phone, msg);
+	sendsms(phone, msg)
+		.then(() => {
+			res.json({ status: 'Message sent successfully' });
+		})
+		.catch((error) => {
+			console.error('Error sending message:', error);
+			res.status(500).json({ status: 'Error sending message' });
+		});
 });
 
 app.listen(port, () => {
@@ -45,31 +52,49 @@ function makeid(length) {
 }
 
 function sendsms(phone, msg) {
-	const outpath = "/var/spool/sms/outgoing/";
-	const checkdir = "/var/spool/sms/checked/";
-	const filename = makeid(10);
-	const filepath = outpath + filename;
-	const checkpath = checkdir + filename;
-	const filecontents = "To: " + phone + "\nAlphabet: ISO\n\n" + msg;
+    return new Promise((resolve, reject) => {
+        const outpath = "/var/spool/sms/outgoing/";
+        const checkdir = "/var/spool/sms/checked/";
+        const filename = makeid(10);
+        const filepath = outpath + filename;
+        const checkpath = checkdir + filename;
+        const filecontents = "To: " + phone + "\nAlphabet: ISO\n\n" + msg;
 
-	console.log(`File directory: ${outpath}`);
-	console.log(`File name: ${filename}`);
-	console.log(`Path: ${filepath}`);
-	
-	if (!fs.existsSync(outpath)) { console.log(`ERROR: directory ${outpath} does not exist`); return 1;}
+        console.log(`File directory: ${outpath}`);
+        console.log(`File name: ${filename}`);
+        console.log(`Path: ${filepath}`);
 
-	try {
-		fs.writeFileSync(filepath, filecontents);
-		console.log('File written successfully.');
-		
-		while (true) {
-			if (fs.existsSync(checkpath)) { console.log(`Message ${filename} checked`); return 0; }
-		}
-		
-	} catch (error) {
-		console.error('Error writing file:', error);
-		return 1;
-	}
+        let responseSent = false;
 
-	return 0;
+        if (!fs.existsSync(outpath)) {
+            console.log(`ERROR: directory ${outpath} does not exist`);
+            reject('Directory does not exist');
+            responseSent = true;
+            return;
+        }
+
+        try {
+            fs.writeFileSync(filepath, filecontents);
+            console.log('File written successfully.');
+
+            const intervalId = setInterval(() => {
+                if (fs.existsSync(checkpath)) {
+                    console.log(`Message ${filename} checked`);
+                    clearInterval(intervalId);
+                    resolve();
+                    responseSent = true;
+                }
+            }, 1000); // Check every second
+
+        } catch (error) {
+            console.error('Error writing file:', error);
+            reject('Error writing file');
+            responseSent = true;
+        } finally {
+            // Ensure a response is sent in case of synchronous errors
+            if (!responseSent) {
+                resolve();
+            }
+        }
+    });
 }
