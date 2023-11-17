@@ -1,6 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 const bodyParser = require('body-parser');
+const { Console } = require('console');
 
 const app = express();
 const port = 80;
@@ -62,7 +63,13 @@ function sendsms(phone, msg) {
 		console.log('File written successfully.');
 		
 		while (true) {
-			if (fs.existsSync(checkpath)) { console.log(`Message ${filename} checked`); return 0; }
+			let i = 0;
+			if (i >= 3) {
+				console.log(`Checking message ${filename} failed`);
+				return 1;
+			}
+			else if (fs.existsSync(checkpath)) { console.log(`Message ${filename} checked`); return 0; }
+			i++
 		}
 		
 	} catch (error) {
