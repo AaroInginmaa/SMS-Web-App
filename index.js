@@ -45,8 +45,10 @@ function makeid(length) {
 
 function sendsms(phone, msg) {
 	const outpath = "/var/spool/sms/outgoing/";
+	const checkdir = "/var/spool/sms/checked/";
 	const filename = makeid(10);
 	const filepath = outpath + filename;
+	const checkpath = checkdir + filename;
 	const filecontents = "To: " + phone + "\nAlphabet: ISO\n\n" + msg;
 
 	console.log(`File directory: ${outpath}`);
@@ -59,7 +61,7 @@ function sendsms(phone, msg) {
 		fs.writeFileSync(filepath, filecontents);
 		console.log('File written successfully.');
 		
-		if (!fs.existsSync(filepath)) { console.log("Message sent"); }
+		if (fs.existsSync(checkpath)) { console.log("Message sent"); }
 		
 	} catch (error) {
 		console.error('Error writing file:', error);
