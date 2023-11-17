@@ -58,6 +58,9 @@ function sendsms(phone, msg) {
 	try {
 		fs.writeFileSync(filepath, filecontents);
 		console.log('File written successfully.');
+		
+		if (!fs.existsSync(filepath)) { console.log("Message sent"); }
+		
 	} catch (error) {
 		console.error('Error writing file:', error);
 		return 1;
