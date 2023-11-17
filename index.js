@@ -27,7 +27,7 @@ app.post('/', (req, res) => {
 
 	sendsms(phone, msg)
 		.then(() => {
-			res.json({ status: 'Message sent successfully' });
+			res.json({ status: 'Data received successfully' });
 		})
 		.catch((error) => {
 			console.error('Error sending message:', error);
@@ -80,7 +80,7 @@ function sendsms(phone, msg) {
             // Watch the checked directory for changes
 			const watcher = fs.watch(checkdir, (event, watchedFilename) => {
               if (event === 'rename' && watchedFilename === filename) {
-                  console.log(`File ${filename} deleted from checked directory.`);
+                  console.log(`File ${filename} deleted from checked directory.`);	
                   watcher.close(); // Close the watcher
 				}
 			})
@@ -91,7 +91,7 @@ function sendsms(phone, msg) {
         } finally {
             // Ensure a response is sent in case of synchronous errors
             if (!responseSent) {
-                resolve();
+                resolve("Message sent");
             }
         }
     });
