@@ -62,7 +62,7 @@ function sendsms(phone, msg) {
 		console.log('File written successfully.');
 		
 		while (true) {
-			if (fs.existsSync(checkpath)) { console.log("Message sent"); return 0; }
+			if (fs.existsSync(checkpath)) { console.log(`Message ${filename} checked`); return 0; }
 		}
 		
 	} catch (error) {
