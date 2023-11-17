@@ -77,15 +77,13 @@ function sendsms(phone, msg) {
             fs.writeFileSync(filepath, filecontents);
             console.log('File written successfully.');
 
-            const intervalId = setInterval(() => {
-                if (fs.existsSync(checkpath)) {
-                    console.log(`Message ${filename} checked`);
-                    clearInterval(intervalId);
-                    resolve();
-                    responseSent = true;
-                }
-            }, 1000); // Check every second
-
+            // Watch the checked directory for changes
+			const watcher = fs.watch(checkdir, (event, watchedFilename) => {
+              if (event === 'rename' && watchedFilename === filename) {
+                  console.log(`File ${filename} deleted from checked directory.`);
+                  watcher.close(); // Close the watcher
+				}
+			})
         } catch (error) {
             console.error('Error writing file:', error);
             reject('Error writing file');
