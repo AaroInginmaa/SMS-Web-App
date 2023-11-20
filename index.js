@@ -1,9 +1,6 @@
 const express = require('express');
 const fs = require('fs');
 const bodyParser = require('body-parser');
-const { Console, error } = require('console');
-const { resolve } = require('path');
-const { rejects } = require('assert');
 
 const app = express();
 const port = 80;
