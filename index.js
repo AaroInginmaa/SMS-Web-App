@@ -64,12 +64,8 @@ function sendsms(phone, msg) {
         console.log(`File name: ${filename}`);
         console.log(`Path: ${filepath}`);
 
-        let responseSent = false;
-
         if (!fs.existsSync(outpath)) {
             console.log(`ERROR: directory ${outpath} does not exist`);
-            reject('Directory does not exist');
-            responseSent = true;
             return;
         }
 
@@ -86,13 +82,8 @@ function sendsms(phone, msg) {
 			})
         } catch (error) {
             console.error('Error writing file:', error);
-            reject('Error writing file');
-            responseSent = true;
         } finally {
-            // Ensure a response is sent in case of synchronous errors
-            if (!responseSent) {
-                resolve("Message sent");
-            }
+            console.log('Message sent');
         }
     });
 }
