@@ -24,6 +24,7 @@ app.post('/', (req, res) => {
 	sendsms(phone, msg)
 		.then(result => {
             res.json({result});
+            console.log(result);
         })
 		.catch((error) => {
 			res.status(500).json({ error: 'Error sending message' });
@@ -62,7 +63,6 @@ function sendsms(phone, msg) {
         
         if (!fs.existsSync(outpath)) {
             reject(`Directory ${outpath} does not exist`);
-            console.log(reject);
             return;
         }
 
@@ -75,14 +75,12 @@ function sendsms(phone, msg) {
                 if (event === 'rename' && watchedFilename === filename + ".LOCK") {
                     console.log(`File: ${filename} | Event: ${event}`);	
                     resolve('Message queued');
-                    console.log(resolve);
                     watcher.close(); // Close the watcher
 	    		}
 	    	})
 
             return;
         } catch (error) {
-            console.error('Error writing file:', error);
             reject(error);
             return;
         } finally {
