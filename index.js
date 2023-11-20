@@ -75,7 +75,7 @@ function sendsms(phone, msg) {
 	    	const watcher = fs.watch(sentdir, (event, watchedFilename) => {
                 if (event === 'rename' && watchedFilename === filename) {
                     console.log(`File: ${filename}\nEvent: ${event}\nPath: ${sentdir}`);	
-                    resolve(`Message sent\n Message ID: ${filename}`);
+                    resolve(`Message sent | Message ID: ${filename}`);
                     watcher.close(); // Close the watcher
 	    		}
 	    	})
