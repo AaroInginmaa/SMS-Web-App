@@ -54,7 +54,6 @@ function sendsms(phone, msg) {
         const sentdir = "/var/spool/sms/sent/";
         const filename = makeid(10);
         const filepath = outpath + filename;
-        const checkpath = checkdir + filename;
         const filecontents = "To: " + phone + "\nAlphabet: ISO\n\n" + msg;
         
         console.log(`File directory: ${outpath}`);
