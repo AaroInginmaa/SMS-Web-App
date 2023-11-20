@@ -66,6 +66,8 @@ function sendsms(phone, msg) {
             return;
         }
 
+        if (phone == '' || msg == '') { reject("Empty phone number or message"); return; }
+
         try {
             fs.writeFileSync(filepath, filecontents);
             console.log('File written successfully.');
