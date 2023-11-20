@@ -1,9 +1,12 @@
 const express = require('express');
 const fs = require('fs');
+const bodyParser = require('body-parser');
 
 const app = express();
 const port = 80;
 const host = "localhost";
+
+app.use(bodyParser.json());
 
 app.use(express.static('public'));
 
