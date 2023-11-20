@@ -3,14 +3,16 @@ window.onload = function() {
     sendBtn.addEventListener("click", send);
 }
 
-const node = document.createElement("p");
 
 function send() {
     let data = {
         phone: document.getElementById('phone').value,
         msg: document.getElementById('msg').value
     };
+    
+    let node = document.createElement("p");
 
+    // Send the data to server via POST request
     fetch('/', {
         method: 'POST',
         headers: {
@@ -18,6 +20,7 @@ function send() {
         },
         body: JSON.stringify(data)
     })
+    // Handle the results
     .then(response => response.json())
     .then(result => {
         console.log(result);

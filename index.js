@@ -20,17 +20,14 @@ app.post('/', (req, res) => {
 	const receivedData = req.body;
 	console.log(receivedData);
 	const { phone, msg } = req.body;
-	
-	// Process the data as needed
-	// res.json({status: 'Data received successfully'});
 
 	sendsms(phone, msg)
 		.then(result => {
             res.json({result});
         })
 		.catch((error) => {
-			console.error('Error sending message:', error);
 			res.status(500).json({ error: 'Error sending message' });
+			console.error('Error sending message:', error);
 		});
 });
 
