@@ -72,14 +72,15 @@ function sendsms(phone, msg) {
 
             // Watch the checked directory for changes
 	    	const watcher = fs.watch(checkdir, (event, watchedFilename) => {
-                if (event === 'rename' && watchedFilename === filename) {
-                    console.log(`File ${filename} deleted from checked directory.`);	
+                if (event === 'rename' && watchedFilename === filename + ".LOCK") {
+                    console.log(`File ${filename} was ${event}`);	
+                    resolve('Message sent');
+                    console.log('Message sent');
+                    
                     watcher.close(); // Close the watcher
 	    		}
 	    	})
 
-            resolve('Message sent');
-            console.log('Message sent');
             return;
         } catch (error) {
             console.error('Error writing file:', error);
