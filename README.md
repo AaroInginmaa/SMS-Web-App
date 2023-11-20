@@ -1,6 +1,6 @@
 # Web2SMS
 ## Description
-A web app to forward messages from web to [SMS Server Tools 3](http://smstools3.kekekasvi.com/) server.
+A web app to send messages using [SMS Server Tools 3](http://smstools3.kekekasvi.com/).
 ## Installation
 1. Install Node.js from https://nodejs.org/en/download
 2. Clone the project repository
