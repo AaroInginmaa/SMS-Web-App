@@ -61,8 +61,8 @@ function sendsms(phone, msg) {
         console.log(`Path: ${filepath}`);
         
         if (!fs.existsSync(outpath)) {
-            console.log(`ERROR: directory ${outpath} does not exist`);
             reject(`Directory ${outpath} does not exist`);
+            console.log(reject);
             return;
         }
 
@@ -73,10 +73,9 @@ function sendsms(phone, msg) {
             // Watch the checked directory for changes
 	    	const watcher = fs.watch(checkdir, (event, watchedFilename) => {
                 if (event === 'rename' && watchedFilename === filename + ".LOCK") {
-                    console.log(`File ${filename} was ${event}`);	
-                    resolve('Message sent');
-                    console.log('Message sent');
-                    
+                    console.log(`File: ${filename} | Event: ${event}`);	
+                    resolve('Message queued');
+                    console.log(resolve);
                     watcher.close(); // Close the watcher
 	    		}
 	    	})
