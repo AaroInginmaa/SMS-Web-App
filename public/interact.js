@@ -28,7 +28,7 @@ function send() {
             document.getElementById("form").appendChild(node);
         }
         else {
-            node.textContent = result['status']
+            node.textContent = result['result']
             document.getElementById("form").appendChild(node);
         }
 
