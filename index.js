@@ -51,7 +51,7 @@ function makeid(length) {
 function sendsms(phone, msg) {
     return new Promise((resolve, reject) => {
         const outpath = "/var/spool/sms/outgoing/";
-        const checkdir = "/var/spool/sms/checked/";
+        const sentdir = "/var/spool/sms/sent/";
         const filename = makeid(10);
         const filepath = outpath + filename;
         const checkpath = checkdir + filename;
@@ -73,10 +73,10 @@ function sendsms(phone, msg) {
             console.log('File written successfully.');
 
             // Watch the checked directory for changes
-	    	const watcher = fs.watch(checkdir, (event, watchedFilename) => {
-                if (event === 'rename' && watchedFilename === filename + ".LOCK") {
+	    	const watcher = fs.watch(sentdir, (event, watchedFilename) => {
+                if (event === 'rename' && watchedFilename === filename) {
                     console.log(`File: ${filename} | Event: ${event}`);	
-                    resolve('Message queued');
+                    resolve('Message sent');
                     watcher.close(); // Close the watcher
 	    		}
 	    	})
