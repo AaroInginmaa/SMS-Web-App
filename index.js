@@ -1,7 +1,9 @@
 const express = require('express');
 const fs = require('fs');
 const bodyParser = require('body-parser');
-const { Console } = require('console');
+const { Console, error } = require('console');
+const { resolve } = require('path');
+const { rejects } = require('assert');
 
 const app = express();
 const port = 80;
@@ -23,12 +25,12 @@ app.post('/', (req, res) => {
 	const { phone, msg } = req.body;
 	
 	// Process the data as needed
-	//res.json({status: 'Data received successfully'});
+	// res.json({status: 'Data received successfully'});
 
 	sendsms(phone, msg)
-		.then(() => {
-			res.json({ status: 'Data received successfully' });
-		})
+		.then(result => {
+            res.json(result);
+        })
 		.catch((error) => {
 			console.error('Error sending message:', error);
 			res.status(500).json({ status: 'Error sending message' });
@@ -59,13 +61,14 @@ function sendsms(phone, msg) {
         const filepath = outpath + filename;
         const checkpath = checkdir + filename;
         const filecontents = "To: " + phone + "\nAlphabet: ISO\n\n" + msg;
-
+        
         console.log(`File directory: ${outpath}`);
         console.log(`File name: ${filename}`);
         console.log(`Path: ${filepath}`);
-
+        
         if (!fs.existsSync(outpath)) {
             console.log(`ERROR: directory ${outpath} does not exist`);
+            reject(`Directory ${outpath} does not exist`);
             return;
         }
 
@@ -74,16 +77,21 @@ function sendsms(phone, msg) {
             console.log('File written successfully.');
 
             // Watch the checked directory for changes
-			const watcher = fs.watch(checkdir, (event, watchedFilename) => {
-              if (event === 'rename' && watchedFilename === filename) {
-                  console.log(`File ${filename} deleted from checked directory.`);	
-                  watcher.close(); // Close the watcher
-				}
-			})
+	    	const watcher = fs.watch(checkpath, (event, watchedFilename) => {
+                if (event === 'rename' && watchedFilename === filename) {
+                    console.log(`File ${filename} deleted from checked directory.`);	
+                    watcher.close(); // Close the watcher
+	    		}
+	    	})
+            
         } catch (error) {
             console.error('Error writing file:', error);
+            reject(error);
+            return;
         } finally {
             console.log('Message sent');
+            resolve('Message sent');
+            return;
         }
     });
 }
