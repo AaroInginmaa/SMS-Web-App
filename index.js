@@ -33,7 +33,7 @@ app.post('/', (req, res) => {
         })
 		.catch((error) => {
 			console.error('Error sending message:', error);
-			res.status(500).json({ status: 'Error sending message' });
+			res.status(500).json({ error: 'Error sending message' });
 		});
 });
 
@@ -83,7 +83,7 @@ function sendsms(phone, msg) {
                     watcher.close(); // Close the watcher
 	    		}
 	    	})
-            
+
         } catch (error) {
             console.error('Error writing file:', error);
             reject(error);
