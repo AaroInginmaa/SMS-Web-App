@@ -29,7 +29,7 @@ app.post('/', (req, res) => {
 
 	sendsms(phone, msg)
 		.then(result => {
-            res.json(result);
+            res.json({result});
         })
 		.catch((error) => {
 			console.error('Error sending message:', error);
@@ -84,13 +84,14 @@ function sendsms(phone, msg) {
 	    		}
 	    	})
 
+            resolve('Message sent');
+            console.log('Message sent');
+            return;
         } catch (error) {
             console.error('Error writing file:', error);
             reject(error);
             return;
         } finally {
-            console.log('Message sent');
-            resolve('Message sent');
             return;
         }
     });
