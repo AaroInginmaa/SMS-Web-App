@@ -23,11 +23,7 @@ app.post('/', (req, res) => {
 
 	sendsms(phone, msg)
 		.then(result => {
-            res.json({result});
-            console.log(result);
-        })
-        .then(result => {
-            res.json({result});
+            res.write.json({result});
             console.log(result);
         })
 		.catch((error) => {
