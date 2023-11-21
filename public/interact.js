@@ -3,7 +3,6 @@ window.onload = function() {
     sendBtn.addEventListener("click", send);
 }
 
-
 function send() {
     let data = {
         phone: document.getElementById('phone').value,
@@ -11,6 +10,9 @@ function send() {
     };
     
     let node = document.createElement("p");
+    document.getElementById("status-message").appendChild(node);
+    node.textContent = 'Sending message...';
+    node.setAttribute("class", "p-3 mb-3 bg-neutral bg-opacity-10 border border-neutral rounded text-black");
 
     // Send the data to server via POST request
     fetch('/', {
@@ -28,12 +30,10 @@ function send() {
         if (result['error']) {
             node.textContent = result['error']
             node.setAttribute("class", "p-3 mb-3 bg-danger bg-opacity-10 border border-danger rounded text-black");
-            document.getElementById("status-message").appendChild(node);
         }
         else {
             node.textContent = result['result']
             node.setAttribute("class", "p-3 mb-3 bg-primary bg-opacity-10 border border-primary rounded text-black");
-            document.getElementById("status-message").appendChild(node);
         }
 
     })
