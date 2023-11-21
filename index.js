@@ -74,7 +74,7 @@ function sendsms(phone, msg) {
             console.log('File written successfully.');
 
             // Watch the checked directory for changes
-	    	const sentWatcher = fs.watch(sentdir, (event, watchedFilename) => {
+	    	const watcher = fs.watch(sentdir, (event, watchedFilename) => {
                 if (event === 'rename' && watchedFilename === filename) {
                     console.log(`File: ${filename}\nEvent: ${event}\nPath: ${sentdir}`);	
                     resolve(`Message ${filename} sent`);
