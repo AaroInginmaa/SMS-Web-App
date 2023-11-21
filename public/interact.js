@@ -1,3 +1,5 @@
+const { response } = require("express");
+
 window.onload = function() {
     let sendBtn = document.getElementById('submit');
     sendBtn.addEventListener("click", send);
@@ -21,7 +23,9 @@ function send() {
         body: JSON.stringify(data)
     })
     // Handle the results
-    .then(response => response.json())
+    .then(response => {
+        console.log(response)
+    })
     .then(result => {
         console.log(result);
 
