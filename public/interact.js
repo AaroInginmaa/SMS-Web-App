@@ -28,12 +28,12 @@ function send() {
         if (result['error']) {
             node.textContent = result['error']
             node.setAttribute("class", "p-3 mb-3 bg-danger bg-opacity-10 border border-danger rounded text-black");
-            document.getElementById("form").appendChild(node);
+            document.getElementById("status-message").appendChild(node);
         }
         else {
             node.textContent = result['result']
             node.setAttribute("class", "p-3 mb-3 bg-primary bg-opacity-10 border border-primary rounded text-black");
-            document.getElementById("form").appendChild(node);
+            document.getElementById("status-message").appendChild(node);
         }
 
     })

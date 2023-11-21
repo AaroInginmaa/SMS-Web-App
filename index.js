@@ -36,6 +36,7 @@ app.listen(port, () => {
 		console.log(`Server listening at http://${host}:${port}`);
 });
 
+// Generate a random string with custom length
 function makeid(length) {
 	let result = '';
 	const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -75,16 +76,15 @@ function sendsms(phone, msg) {
 	    	const watcher = fs.watch(sentdir, (event, watchedFilename) => {
                 if (event === 'rename' && watchedFilename === filename) {
                     console.log(`File: ${filename}\nEvent: ${event}\nPath: ${sentdir}`);	
-                    resolve(`Message sent | Message ID: ${filename}`);
+                    resolve(`<b>Message</b> sent | Message ID: ${filename}`);
                     watcher.close(); // Close the watcher
 	    		}
 	    	})
 
             return;
-        } catch (error) {
+        }
+        catch (error) {
             reject(error);
-            return;
-        } finally {
             return;
         }
     });
