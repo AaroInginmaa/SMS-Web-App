@@ -6,15 +6,15 @@ const app = express();
 const port = 80;
 const host = "localhost";
 
-app.use(bodyParser.json());
+const config = JSON.parse(fs.readFileSync(__dirname + '/config.json', 'utf8'));
 
+app.use(bodyParser.json());
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
 	// Handle the root path (send your HTML file or whatever is appropriate)
 	res.sendFile(__dirname + '/public/index.html');
 });
-
 
 app.post('/', (req, res) => {
 	const receivedData = req.body;
@@ -27,7 +27,7 @@ app.post('/', (req, res) => {
             console.log(result);
         })
 		.catch((error) => {
-			res.status(500).json({ error: `Error sending message: ${error}` });
+			res.status(500).json({ error: `Error sending message` });
 			console.error('Error sending message:', error);
 		});
 });
@@ -51,11 +51,11 @@ function makeid(length) {
 
 function sendsms(phone, msg) {
     return new Promise((resolve, reject) => {
-        const outdir = "/var/spool/sms/outgoing/";
-        const sentdir = "/var/spool/sms/sent/";
-        const filename = makeid(10);
+        const outdir = config.out;
+        const sentdir = config.sent;
+        const filename = makeid(config.nameLength);
         const filepath = outdir + filename;
-        const filecontents = "To: " + phone + "\nAlphabet: ISO\n\n" + msg;
+        const filecontents = `To: ${phone}\nAlphabet: ${config.alphabet}\n\n ${msg}`;
         
         console.log(`File directory: ${outdir}`);
         console.log(`File name: ${filename}`);
@@ -76,15 +76,13 @@ function sendsms(phone, msg) {
 	    	const watcher = fs.watch(sentdir, (event, watchedFilename) => {
                 if (event === 'rename' && watchedFilename === filename) {
                     console.log(`File: ${filename}\nEvent: ${event}\nPath: ${sentdir}`);	
-                    resolve(`Message ${filename} sent`);
                     watcher.close(); // Close the watcher
+                    resolve(`Message ${filename} sent`);
 	    		}
 	    	})
-
-            return;
         }
-        catch (error) {
-            reject(error);
+        catch {
+            reject("Error sending message");
             return;
         }
     });
