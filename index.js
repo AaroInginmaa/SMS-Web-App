@@ -21,9 +21,9 @@ app.post('/', (req, res) => {
 	console.log(receivedData);
 	const { phone, msg } = req.body;
 
-	sendsms(phone, msg)
+	Promise.all([sendsms(phone, msg)])
 		.then(result => {
-            res.write.json({result});
+            res.json({result});
             console.log(result);
         })
 		.catch((error) => {
