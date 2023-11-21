@@ -1,10 +1,14 @@
 const express = require('express');
 const fs = require('fs');
 const bodyParser = require('body-parser');
+const { error } = require('console');
 
 const app = express();
 const port = 80;
 const host = "localhost";
+
+const sentdir = "/var/spool/sms/sent/";
+const outdir = "/var/spool/sms/outgoing";
 
 app.use(bodyParser.json());
 
@@ -21,15 +25,25 @@ app.post('/', (req, res) => {
 	console.log(receivedData);
 	const { phone, msg } = req.body;
 
-	Promise.all([sendsms(phone, msg)])
-		.then((result) => {
+    let filename = makeid(10);
+
+	send(filename, phone, msg)
+		.then(result => {
             res.json({result});
             console.log(result);
         })
-		.catch((error) => {
-			res.status(500).json({ error: `Error sending message: ${error}` });
-			console.error('Error sending message:', error);
+		.catch(error => {
+			res.status(500).json({ error: `Error queueing message: ${error}` });
+			console.error('Error queueing message:', error);
 		});
+    check(filename, sentdir)
+        .then(result => {
+            res.json({result});
+            console.log(result);
+        })
+        .catch(error => {
+            res.status(500).json({ error: `Error sending message: ${error}` });
+        });
 });
 
 app.listen(port, () => {
@@ -49,44 +63,38 @@ function makeid(length) {
 	return result;
 }
 
-function sendsms(phone, msg) {
+
+
+function send(filename, phone, msg) {
+    const filepath = outdir + filename;
+    let filecontents = `To: ${phone}\nAlphabet: ISO\n\n${msg}`;
+
+    try {
+        fs.writeFileSync(filepath, filecontents);
+        console.log('File written successfully.');
+        Promise.resolve(`Message ${filename} queued`);
+        return;
+    } catch (error) {
+        Promise.reject(`Error queueing message ${filename}`);
+        throw error;
+    }
+}
+
+// Function to check and send SMS
+function check(filename) {
     return new Promise((resolve, reject) => {
-        const outdir = "/var/spool/sms/outgoing/";
-        const sentdir = "/var/spool/sms/sent/";
-        const filename = makeid(10);
-        const filepath = outdir + filename;
-        const filecontents = "To: " + phone + "\nAlphabet: ISO\n\n" + msg;
-        
-        console.log(`File directory: ${outdir}`);
-        console.log(`File name: ${filename}`);
-        console.log(`Path: ${filepath}`);
-        
-        if (!fs.existsSync(outdir)) {
-            reject(`Directory ${outdir} does not exist`);
-            return;
-        }
-
-        if (phone == '' || msg == '') { reject("Empty phone number or message"); return; }
-
         try {
-            fs.writeFileSync(filepath, filecontents);
-            resolve(`Message ${filename} queued`);
-            console.log('File written successfully.');
-
-            // Watch the checked directory for changes
-	    	const watcher = fs.watch(sentdir, (event, watchedFilename) => {
+            const watcher = fs.watch(sentdir, (event, watchedFilename) => {
                 if (event === 'rename' && watchedFilename === filename) {
-                    console.log(`File: ${filename}\nEvent: ${event}\nPath: ${sentdir}`);	
+                    console.log(`File: ${filename}\nEvent: ${event}\nPath: ${sentdir}`);
                     resolve(`Message ${filename} sent`);
                     watcher.close(); // Close the watcher
-	    		}
-	    	})
-
-            return;
+                }
+            });
         }
-        catch (error) {
-            reject(error);
-            return;
+        catch(error) {
+            Promise.reject(`Error sending message ${filename}`);
+            throw error;
         }
     });
 }
