@@ -22,7 +22,7 @@ app.post('/', (req, res) => {
 	const { phone, msg } = req.body;
 
 	Promise.all([sendsms(phone, msg)])
-		.then(result => {
+		.then((result) => {
             res.json({result});
             console.log(result);
         })
