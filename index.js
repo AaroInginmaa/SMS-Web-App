@@ -78,9 +78,9 @@ function check(checkfile) {
             if (event === 'rename' && watchedFilename === checkfile) {
                 console.log(`File: ${checkfile}\nEvent: ${event}\nPath: ${sentdir}`);
                 watcher.close(); // Close the watcher
+                return Promise.resolve(`Message ${checkfile} sent`);
             }
         });
-        return Promise.resolve(`Message ${checkfile} sent`);
     }
     catch(error) {
         return Promise.reject(`${error}`);
