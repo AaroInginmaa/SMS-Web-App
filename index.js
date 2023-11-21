@@ -62,11 +62,11 @@ function send(filename, phone, msg) {
     try {
         fs.writeFileSync(filepath, filecontents);
         console.log('File written successfully.');
-        if(!check(filename)) { return Promise.reject(`Error sending message ${filename}`); }
+        check(filename);
         return Promise.resolve(`Message ${filename} sent`);
     }
     catch (error) {
-        return Promise.reject(`Error sending message: ${error}`);
+        return Promise.reject(`${error}`);
         //throw error;
     }
 
@@ -81,9 +81,9 @@ function check(checkfile) {
                 watcher.close(); // Close the watcher
             }
         });
-        return 0;
+        return Promise.resolve(`Message ${checkfile} sent`);
     }
-    catch {
-        return 1;
+    catch(error) {
+        return Promise.reject(`${error}`);
     }
 }
