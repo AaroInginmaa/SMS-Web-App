@@ -28,22 +28,14 @@ app.post('/', (req, res) => {
     let filename = makeid(10);
 
 	send(filename, phone, msg)
-		.then(result => {
-            res.write(result);
-            console.log(result);
+		.then(notice => {
+            res.json({ notice });
+            console.log(notice);
         })
 		.catch(error => {
-			res.write(500).json({ error: `Error queueing message: ${error}` });
+			res.status(500).json({ error: `Error queueing message: ${error}` });
 			console.error('Error queueing message:', error);
 		});
-    check(filename, sentdir)
-        .then(result => {
-            res.write(result);
-            console.log(result);
-        })
-        .catch(error => {
-            res.write(500).json({ error: `Error sending message: ${error}` });
-        });
 });
 
 app.listen(port, () => {
@@ -72,19 +64,21 @@ function send(filename, phone, msg) {
     try {
         fs.writeFileSync(filepath, filecontents);
         console.log('File written successfully.');
+        check(filename);
         return Promise.resolve(`Message ${filename} queued`);
     } catch (error) {
         return Promise.reject(`Error queueing message ${filename}`);
         //throw error;
     }
+
 }
 
 // Function to check and send SMS
-function check(filename) {
+function check(checkfile) {
     return new Promise((resolve, reject) => {
         try {
             const watcher = fs.watch(sentdir, (event, watchedFilename) => {
-                if (event === 'rename' && watchedFilename === filename) {
+                if (event === 'rename' && watchedFilename === checkfile) {
                     console.log(`File: ${filename}\nEvent: ${event}\nPath: ${sentdir}`);
                     resolve(`Message ${filename} sent`);
                     watcher.close(); // Close the watcher

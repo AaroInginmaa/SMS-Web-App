@@ -1,5 +1,3 @@
-const { response } = require("express");
-
 window.onload = function() {
     let sendBtn = document.getElementById('submit');
     sendBtn.addEventListener("click", send);
@@ -23,15 +21,20 @@ function send() {
         body: JSON.stringify(data)
     })
     // Handle the results
-    .then(response => {
-        console.log(response)
-    })
+    .then(response => response.json())
     .then(result => {
         console.log(result);
 
-        node.textContent = result;
-        node.setAttribute("class", "p-3 mb-3 bg-primary bg-opacity-10 border border-primary rounded text-black");
-        document.getElementById("status-message").appendChild(node);
+        if (result['error']) {
+            node.textContent = result['error']
+            node.setAttribute("class", "p-3 mb-3 bg-danger bg-opacity-10 border border-danger rounded text-black");
+            document.getElementById("status-message").appendChild(node);
+        }
+        else {
+            node.textContent = result['result']
+            node.setAttribute("class", "p-3 mb-3 bg-primary bg-opacity-10 border border-primary rounded text-black");
+            document.getElementById("status-message").appendChild(node);
+        }
 
     })
     .catch(error => {
