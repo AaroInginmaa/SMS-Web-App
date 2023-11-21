@@ -72,11 +72,10 @@ function send(filename, phone, msg) {
     try {
         fs.writeFileSync(filepath, filecontents);
         console.log('File written successfully.');
-        Promise.resolve(`Message ${filename} queued`);
-        return;
+        return Promise.resolve(`Message ${filename} queued`);
     } catch (error) {
-        Promise.reject(`Error queueing message ${filename}`);
-        throw error;
+        return Promise.reject(`Error queueing message ${filename}`);
+        //throw error;
     }
 }
 
@@ -93,7 +92,7 @@ function check(filename) {
             });
         }
         catch(error) {
-            Promise.reject(`Error sending message ${filename}`);
+            reject(`Error sending message ${filename}`);
             throw error;
         }
     });
