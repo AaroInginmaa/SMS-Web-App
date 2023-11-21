@@ -51,18 +51,18 @@ function makeid(length) {
 
 function sendsms(phone, msg) {
     return new Promise((resolve, reject) => {
-        const outpath = "/var/spool/sms/outgoing/";
+        const outdir = "/var/spool/sms/outgoing/";
         const sentdir = "/var/spool/sms/sent/";
         const filename = makeid(10);
-        const filepath = outpath + filename;
+        const filepath = outdir + filename;
         const filecontents = "To: " + phone + "\nAlphabet: ISO\n\n" + msg;
         
-        console.log(`File directory: ${outpath}`);
+        console.log(`File directory: ${outdir}`);
         console.log(`File name: ${filename}`);
         console.log(`Path: ${filepath}`);
         
-        if (!fs.existsSync(outpath)) {
-            reject(`Directory ${outpath} does not exist`);
+        if (!fs.existsSync(outdir)) {
+            reject(`Directory ${outdir} does not exist`);
             return;
         }
 
@@ -70,13 +70,14 @@ function sendsms(phone, msg) {
 
         try {
             fs.writeFileSync(filepath, filecontents);
+            resolve(`Message ${filename} queued`);
             console.log('File written successfully.');
 
             // Watch the checked directory for changes
-	    	const watcher = fs.watch(sentdir, (event, watchedFilename) => {
+	    	const sentWatcher = fs.watch(sentdir, (event, watchedFilename) => {
                 if (event === 'rename' && watchedFilename === filename) {
                     console.log(`File: ${filename}\nEvent: ${event}\nPath: ${sentdir}`);	
-                    resolve(`Message sent\nMessage ID: ${filename}`);
+                    resolve(`Message ${filename} sent`);
                     watcher.close(); // Close the watcher
 	    		}
 	    	})
