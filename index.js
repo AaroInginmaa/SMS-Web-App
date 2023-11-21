@@ -62,10 +62,11 @@ function send(filename, phone, msg) {
     try {
         fs.writeFileSync(filepath, filecontents);
         console.log('File written successfully.');
-        check(filename);
+        if(!check(filename)) { return Promise.reject(`Error sending message ${filename}`); }
+        return Promise.resolve(`Message ${filename} sent`);
     }
     catch (error) {
-        return Promise.reject(`Error queueing message ${filename}`);
+        return Promise.reject(`Error sending message: ${error}`);
         //throw error;
     }
 
@@ -73,19 +74,16 @@ function send(filename, phone, msg) {
 
 // Function to check and send SMS
 function check(checkfile) {
-    return new Promise((resolve, reject) => {
-        try {
-            const watcher = fs.watch(sentdir, (event, watchedFilename) => {
-                if (event === 'rename' && watchedFilename === checkfile) {
-                    console.log(`File: ${checkfile}\nEvent: ${event}\nPath: ${sentdir}`);
-                    resolve(`Message ${checkfile} sent`);
-                    watcher.close(); // Close the watcher
-                }
-            });
-        }
-        catch(error) {
-            reject(`Error sending message ${filename}`);
-            throw error;
-        }
-    });
+    try {
+        const watcher = fs.watch(sentdir, (event, watchedFilename) => {
+            if (event === 'rename' && watchedFilename === checkfile) {
+                console.log(`File: ${checkfile}\nEvent: ${event}\nPath: ${sentdir}`);
+                watcher.close(); // Close the watcher
+            }
+        });
+        return 0;
+    }
+    catch {
+        return 1;
+    }
 }
