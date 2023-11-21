@@ -11,7 +11,7 @@ function send() {
     
     let node = document.createElement("p");
     document.getElementById("status-message").appendChild(node);
-    node.textContent = `Sending message ${document.getElementById('phone').value}`;
+    node.textContent = 'Sending message';
     node.setAttribute("class", "p-3 mb-3 bg-warning bg-opacity-10 border border-warning rounded text-black");
 
     // Send the data to server via POST request
