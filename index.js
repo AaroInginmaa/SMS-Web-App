@@ -2,11 +2,12 @@ const express = require('express');
 const fs = require('fs');
 const bodyParser = require('body-parser');
 
-const app = express();
-const port = 80;
-const host = "localhost";
-
 const config = JSON.parse(fs.readFileSync(__dirname + '/config.json', 'utf8'));
+const app = express();
+
+const host = config.server.host;
+const port = config.server.port;
+
 
 app.use(bodyParser.json());
 app.use(express.static('public'));
@@ -51,11 +52,11 @@ function makeid(length) {
 
 function sendsms(phone, msg) {
     return new Promise((resolve, reject) => {
-        const outdir = config.out;
-        const sentdir = config.sent;
-        const filename = makeid(config.nameLength);
+        const outdir = config.message.out;
+        const sentdir = config.message.sent;
+        const filename = makeid(config.message.nameLength);
         const filepath = outdir + filename;
-        const filecontents = `To: ${phone}\nAlphabet: ${config.alphabet}\n\n ${msg}`;
+        const filecontents = `To: ${phone}\nAlphabet: ${config.message.alphabet}\n\n ${msg}`;
         
         console.log(`File directory: ${outdir}`);
         console.log(`File name: ${filename}`);
