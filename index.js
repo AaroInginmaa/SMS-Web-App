@@ -33,8 +33,8 @@ app.post('/', (req, res) => {
             console.log(result);
         })
 		.catch(error => {
-			res.status(500).json({ error: `Error queueing message: ${error}` });
-			console.error('Error queueing message:', error);
+			res.status(500).json({ error: `${error}` });
+			console.error(error);
 		});
 });
 
@@ -62,6 +62,7 @@ function send(filename, phone, msg) {
     try {
         fs.writeFileSync(filepath, filecontents);
         console.log('File written successfully.');
+        console.log(check(filename));
         if (check(filename)) {
             return Promise.resolve(`Message ${filename} sent`);
         }
