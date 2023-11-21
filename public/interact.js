@@ -11,8 +11,8 @@ function send() {
     
     let node = document.createElement("p");
     document.getElementById("status-message").appendChild(node);
-    node.textContent = 'Sending message...';
-    node.setAttribute("class", "p-3 mb-3 bg-neutral bg-opacity-10 border border-neutral rounded text-black");
+    node.textContent = `Sending message ${phone}`;
+    node.setAttribute("class", "p-3 mb-3 bg-warning bg-opacity-10 border border-warning rounded text-black");
 
     // Send the data to server via POST request
     fetch('/', {
@@ -33,7 +33,7 @@ function send() {
         }
         else {
             node.textContent = result['result']
-            node.setAttribute("class", "p-3 mb-3 bg-primary bg-opacity-10 border border-primary rounded text-black");
+            node.setAttribute("class", "p-3 mb-3 bg-success bg-opacity-10 border border-success rounded text-black");
         }
 
     })
