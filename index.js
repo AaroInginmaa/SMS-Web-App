@@ -29,20 +29,20 @@ app.post('/', (req, res) => {
 
 	send(filename, phone, msg)
 		.then(result => {
-            res.json({result});
+            res.write({result});
             console.log(result);
         })
 		.catch(error => {
-			res.status(500).json({ error: `Error queueing message: ${error}` });
+			res.write(500).json({ error: `Error queueing message: ${error}` });
 			console.error('Error queueing message:', error);
 		});
     check(filename, sentdir)
         .then(result => {
-            res.json({result});
+            res.write({result});
             console.log(result);
         })
         .catch(error => {
-            res.status(500).json({ error: `Error sending message: ${error}` });
+            res.write(500).json({ error: `Error sending message: ${error}` });
         });
 });
 
