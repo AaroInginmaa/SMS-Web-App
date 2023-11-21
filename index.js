@@ -80,7 +80,7 @@ function check(checkfile) {
             const watcher = fs.watch(sentdir, (event, watchedFilename) => {
                 if (event === 'rename' && watchedFilename === checkfile) {
                     console.log(`File: ${checkfile}\nEvent: ${event}\nPath: ${sentdir}`);
-                    resolve(`Message ${filename} sent`);
+                    resolve(`Message ${checkfile} sent`);
                     watcher.close(); // Close the watcher
                 }
             });
