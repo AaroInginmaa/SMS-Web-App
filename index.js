@@ -62,8 +62,7 @@ function send(filename, phone, msg) {
     try {
         fs.writeFileSync(filepath, filecontents);
         console.log('File written successfully.');
-        check(filename);
-        return Promise.resolve(`Message ${filename} sent`);
+        return check(filename);
     }
     catch (error) {
         return Promise.reject(`${error}`);
