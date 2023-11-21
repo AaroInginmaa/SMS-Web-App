@@ -2,8 +2,8 @@ const express = require('express');
 const fs = require('fs');
 const bodyParser = require('body-parser');
 
-const config = JSON.parse(fs.readFileSync(__dirname + '/config.json', 'utf8'));
 const app = express();
+const config = JSON.parse(fs.readFileSync(__dirname + '/config.json', 'utf8'));
 
 const host = config.server.host;
 const port = config.server.port;
@@ -75,6 +75,7 @@ function sendsms(phone, msg) {
 
             // Watch the checked directory for changes
 	    	const watcher = fs.watch(sentdir, (event, watchedFilename) => {
+                console.log(`Watching for changes in ${sentdir}`);
                 if (event === 'rename' && watchedFilename === filename) {
                     console.log(`File: ${filename}\nEvent: ${event}\nPath: ${sentdir}`);	
                     watcher.close(); // Close the watcher
