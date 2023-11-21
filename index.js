@@ -78,8 +78,8 @@ function sendsms(phone, msg) {
                 console.log(`Watching for changes in ${sentdir}`);
                 if (event === 'rename' && watchedFilename === filename) {
                     console.log(`File: ${filename}\nEvent: ${event}\nPath: ${sentdir}`);	
-                    watcher.close(); // Close the watcher
                     resolve(`Message ${filename} sent`);
+                    watcher.close(); // Close the watcher
 	    		}
 	    	})
         }
