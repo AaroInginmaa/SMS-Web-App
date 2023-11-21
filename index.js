@@ -29,7 +29,7 @@ app.post('/', (req, res) => {
 
 	send(filename, phone, msg)
 		.then(result => {
-            res.write({result});
+            res.write(result);
             console.log(result);
         })
 		.catch(error => {
@@ -38,7 +38,7 @@ app.post('/', (req, res) => {
 		});
     check(filename, sentdir)
         .then(result => {
-            res.write({result});
+            res.write(result);
             console.log(result);
         })
         .catch(error => {
