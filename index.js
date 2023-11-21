@@ -62,7 +62,7 @@ function send(filename, phone, msg) {
     try {
         fs.writeFileSync(filepath, filecontents);
         console.log('File written successfully.');
-        if (check()) {
+        if (check(filename)) {
             return Promise.resolve(`Message ${filename} sent`);
         }
         else {
@@ -88,6 +88,7 @@ function check(checkfile) {
         });
     }
     catch(error) {
+        console.log(error);
         return false;
     }
 }
