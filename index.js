@@ -8,7 +8,7 @@ const port = 80;
 const host = "localhost";
 
 const sentdir = "/var/spool/sms/sent/";
-const outdir = "/var/spool/sms/outgoing";
+const outdir = "/var/spool/sms/outgoing/";
 
 app.use(bodyParser.json());
 
