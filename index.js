@@ -62,7 +62,12 @@ function send(filename, phone, msg) {
     try {
         fs.writeFileSync(filepath, filecontents);
         console.log('File written successfully.');
-        return check(filename);
+        if (check()) {
+            return Promise.resolve(`Message ${filename} sent`);
+        }
+        else {
+            return Promise.reject(`Error sending message ${filename}`);
+        }
     }
     catch (error) {
         return Promise.reject(`${error}`);
@@ -78,11 +83,11 @@ function check(checkfile) {
             if (event === 'rename' && watchedFilename === checkfile) {
                 console.log(`File: ${checkfile}\nEvent: ${event}\nPath: ${sentdir}`);
                 watcher.close(); // Close the watcher
-                return Promise.resolve(`Message ${checkfile} sent`);
+                return true;
             }
         });
     }
     catch(error) {
-        return Promise.reject(`${error}`);
+        return false;
     }
 }
