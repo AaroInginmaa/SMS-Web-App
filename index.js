@@ -28,9 +28,9 @@ app.post('/', (req, res) => {
     let filename = makeid(10);
 
 	send(filename, phone, msg)
-		.then(notice => {
-            res.json({ notice });
-            console.log(notice);
+		.then(result => {
+            res.json({ result });
+            console.log(result);
         })
 		.catch(error => {
 			res.status(500).json({ error: `Error queueing message: ${error}` });
@@ -55,8 +55,6 @@ function makeid(length) {
 	return result;
 }
 
-
-
 function send(filename, phone, msg) {
     const filepath = outdir + filename;
     let filecontents = `To: ${phone}\nAlphabet: ISO\n\n${msg}`;
@@ -65,8 +63,8 @@ function send(filename, phone, msg) {
         fs.writeFileSync(filepath, filecontents);
         console.log('File written successfully.');
         check(filename);
-        return Promise.resolve(`Message ${filename} queued`);
-    } catch (error) {
+    }
+    catch (error) {
         return Promise.reject(`Error queueing message ${filename}`);
         //throw error;
     }
