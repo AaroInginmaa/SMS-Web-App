@@ -22,6 +22,7 @@ app.get('/', (req, res) => {
 
 // Handle POST requests
 app.post('/', (req, res) => {
+    console.log('---------------------------------------------------------');
     console.log("POST request received.");
 
     const receivedData = req.body;
@@ -42,6 +43,7 @@ app.post('/', (req, res) => {
 
 // Start the server
 app.listen(port, () => {
+    console.log('---------------------------------------------------------');
     console.log(`Server listening at http://${host}:${port}`);
 });
 
@@ -61,15 +63,16 @@ function makeid(length) {
 // Send SMS function
 function sendsms(phone, msg) {
     return new Promise((resolve, reject) => {
+        console.log('---------------------------------------------------------');
         console.log("Sending SMS...");
 
         const filename = makeid(10);
         const filepath = outgoingDirectory + filename;
         const filecontents = `To: ${phone}\nAlphabet: ISO\n\n${msg}`;
 
-        console.log(`File directory: ${outgoingDirectory}`);
         console.log(`File name: ${filename}`);
-        console.log(`Path: ${filepath}`);
+        console.log(`File directory: ${outgoingDirectory}`);
+        console.log(`Full Path: ${filepath}`);
 
         if (!fs.existsSync(outgoingDirectory)) {
             const errorMessage = `Directory ${outgoingDirectory} does not exist`;
@@ -109,6 +112,7 @@ function sendsms(phone, msg) {
 // Handle file events for the watcher
 function handleFileEvent(event, watchedFilename, filename, watcher, resolve) {
     if (event === 'rename' && watchedFilename === filename) {
+        console.log('---------------------------------------------------------');
         console.log(`File: ${filename}\nEvent: ${event}\nPath: ${sentDirectory}`);
         watcher.close(); // Close the watcher
         resolve(`Message ${filename} sent`);
