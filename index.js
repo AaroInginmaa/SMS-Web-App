@@ -75,7 +75,6 @@ function sendsms(phone, msg) {
 
             // Watch the checked directory for changes
 	    	const watcher = fs.watch(sentdir, (event, watchedFilename) => {
-                console.log(`Watching for changes in ${sentdir}`);
                 if (event === 'rename' && watchedFilename === filename) {
                     console.log(`File: ${filename}\nEvent: ${event}\nPath: ${sentdir}`);	
                     watcher.close(); // Close the watcher
