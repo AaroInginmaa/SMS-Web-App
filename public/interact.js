@@ -1,9 +1,13 @@
+var sendBtn = document.getElementById('submit');
+
 window.onload = function() {
-    let sendBtn = document.getElementById('submit');
+    sendBtn = document.getElementById('submit');
     sendBtn.addEventListener("click", send);
 }
 
 function send() {
+    timeout(sendBtn);
+
     let data = {
         phone: document.getElementById('phone').value,
         msg: document.getElementById('msg').value
@@ -12,7 +16,7 @@ function send() {
     let node = document.createElement("p");
     document.getElementById("status-message").appendChild(node);
     node.textContent = 'Sending message';
-    node.setAttribute("class", "p-3 mb-3 bg-warning bg-opacity-10 border border-warning rounded text-black");
+    node.setAttribute("class", "p-3 bg-warning bg-opacity-10 border border-warning rounded text-black");
 
     // Send the data to server via POST request
     fetch('/', {
@@ -29,15 +33,22 @@ function send() {
 
         if (result['error']) {
             node.textContent = result['error']
-            node.setAttribute("class", "p-3 mb-3 bg-danger bg-opacity-10 border border-danger rounded text-black");
+            node.setAttribute("class", "p-3 bg-danger bg-opacity-10 border border-danger rounded text-black");
         }
         else {
             node.textContent = result['result']
-            node.setAttribute("class", "p-3 mb-3 bg-success bg-opacity-10 border border-success rounded text-black");
+            node.setAttribute("class", "p-3 bg-success bg-opacity-10 border border-success rounded text-black");
         }
 
     })
     .catch(error => {
         console.error(error);
     });
+}
+
+function timeout(obj) {
+    obj.disabled = true;
+    setTimeout(function() {
+        obj.disabled = false;
+    }, 2000);
 }

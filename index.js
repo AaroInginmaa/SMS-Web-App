@@ -74,6 +74,7 @@ function sendsms(phone, msg) {
         if (!fs.existsSync(outgoingDirectory)) {
             const errorMessage = `Directory ${outgoingDirectory} does not exist`;
             console.error(errorMessage);
+
             reject(errorMessage);
             return;
         }
@@ -81,6 +82,7 @@ function sendsms(phone, msg) {
         if (phone == '' || msg == '') {
             const errorMessage = "Empty phone number or message";
             console.error(errorMessage);
+            
             reject(errorMessage);
             return;
         }
@@ -97,6 +99,7 @@ function sendsms(phone, msg) {
             return;
         } catch (error) {
             console.error('Error writing file:', error);
+            
             reject(`Error writing file - ${error}`);
             return;
         }
@@ -110,4 +113,5 @@ function handleFileEvent(event, watchedFilename, filename, watcher, resolve) {
         watcher.close(); // Close the watcher
         resolve(`Message ${filename} sent`);
     }
+    return;
 }
