@@ -3,19 +3,18 @@ const fs = require('fs');
 const bodyParser = require('body-parser');
 
 const app = express();
-const config = JSON.parse(fs.readFileSync(__dirname + '/config.json', 'utf8'));
-
-const host = config.server.host;
-const port = config.server.port;
-
+const port = 80;
+const host = "localhost";
 
 app.use(bodyParser.json());
+
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
 	// Handle the root path (send your HTML file or whatever is appropriate)
 	res.sendFile(__dirname + '/public/index.html');
 });
+
 
 app.post('/', (req, res) => {
 	const receivedData = req.body;
@@ -28,7 +27,7 @@ app.post('/', (req, res) => {
             console.log(result);
         })
 		.catch((error) => {
-			res.status(500).json({ error: `Error sending message` });
+			res.status(500).json({ error: `Error sending message: ${error}` });
 			console.error('Error sending message:', error);
 		});
 });
@@ -52,11 +51,11 @@ function makeid(length) {
 
 function sendsms(phone, msg) {
     return new Promise((resolve, reject) => {
-        const outdir = config.message.out;
-        const sentdir = config.message.sent;
-        const filename = makeid(config.message.nameLength);
+        const outdir = "/var/spool/sms/outgoing/";
+        const sentdir = "/var/spool/sms/sent/";
+        const filename = makeid(10);
         const filepath = outdir + filename;
-        const filecontents = `To: ${phone}\nAlphabet: ${config.message.alphabet}\n\n ${msg}`;
+        const filecontents = "To: " + phone + "\nAlphabet: ISO\n\n" + msg;
         
         console.log(`File directory: ${outdir}`);
         console.log(`File name: ${filename}`);
@@ -82,9 +81,11 @@ function sendsms(phone, msg) {
                     watcher.close(); // Close the watcher
 	    		}
 	    	})
+
+            return;
         }
-        catch {
-            reject("Error sending message");
+        catch (error) {
+            reject(error);
             return;
         }
     });
