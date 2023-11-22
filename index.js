@@ -15,25 +15,28 @@ app.use(express.static('public'));
 
 // Handle the root path
 app.get('/', (req, res) => {
+    console.log("GET request received for the root path.");
     // Send your HTML file or whatever is appropriate
     res.sendFile(__dirname + '/public/index.html');
 });
 
 // Handle POST requests
 app.post('/', (req, res) => {
+    console.log("POST request received.");
+
     const receivedData = req.body;
-    console.log(receivedData);
+    console.log("Received data:", receivedData);
 
     const { phone, msg } = req.body;
 
     sendsms(phone, msg)
         .then(result => {
+            console.log("Message sent successfully:", result);
             res.json({ result });
-            console.log(result);
         })
         .catch((error) => {
-            res.status(500).json({ error: `Error sending message` });
             console.error('Error sending message:', error);
+            res.status(500).json({ error: `Error sending message - ${error}` });
         });
 });
 
@@ -58,6 +61,8 @@ function makeid(length) {
 // Send SMS function
 function sendsms(phone, msg) {
     return new Promise((resolve, reject) => {
+        console.log("Sending SMS...");
+
         const filename = makeid(10);
         const filepath = outgoingDirectory + filename;
         const filecontents = `To: ${phone}\nAlphabet: ISO\n\n${msg}`;
@@ -67,12 +72,16 @@ function sendsms(phone, msg) {
         console.log(`Path: ${filepath}`);
 
         if (!fs.existsSync(outgoingDirectory)) {
-            reject(`Directory ${outgoingDirectory} does not exist`);
+            const errorMessage = `Directory ${outgoingDirectory} does not exist`;
+            console.error(errorMessage);
+            reject(errorMessage);
             return;
         }
 
         if (phone == '' || msg == '') {
-            reject("Empty phone number or message");
+            const errorMessage = "Empty phone number or message";
+            console.error(errorMessage);
+            reject(errorMessage);
             return;
         }
 
@@ -87,7 +96,8 @@ function sendsms(phone, msg) {
 
             return;
         } catch (error) {
-            reject(error);
+            console.error('Error writing file:', error);
+            reject(`Error writing file - ${error}`);
             return;
         }
     });
