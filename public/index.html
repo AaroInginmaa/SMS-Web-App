@@ -12,7 +12,7 @@
     <div class="container">
         <form class="bg-light p-3 rounded" onsubmit="return false">
             <label class="form-label" for="phone">Phone number:</label>
-            <input class="form-control" type="number" name="phone" id="phone" required>
+            <input class="form-control" type="number" pattern="[1-9][0-9]*" name="phone" id="phone" required>
             <label class="form-label" for="msg">Message:</label>
             <textarea class="form-control" name="msg" id="msg" cols="30" rows="10" required></textarea>
             <button class="btn btn-primary my-3" id="submit" name="submit">
