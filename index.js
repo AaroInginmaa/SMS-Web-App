@@ -6,6 +6,9 @@ const app = express();
 const port = 80;
 const host = "localhost";
 
+const outdir = "/var/spool/sms/outgoing/";
+const sentdir = "/var/spool/sms/sent/";
+
 app.use(bodyParser.json());
 
 app.use(express.static('public'));
@@ -27,7 +30,7 @@ app.post('/', (req, res) => {
             console.log(result);
         })
 		.catch((error) => {
-			res.status(500).json({ error: `Error sending message: ${error}` });
+			res.status(500).json({ error: `Error sending message` });
 			console.error('Error sending message:', error);
 		});
 });
@@ -51,11 +54,9 @@ function makeid(length) {
 
 function sendsms(phone, msg) {
     return new Promise((resolve, reject) => {
-        const outdir = "/var/spool/sms/outgoing/";
-        const sentdir = "/var/spool/sms/sent/";
         const filename = makeid(10);
         const filepath = outdir + filename;
-        const filecontents = "To: " + phone + "\nAlphabet: ISO\n\n" + msg;
+        const filecontents = `To: ${phone}\nAlphabet: ISO\n\n${msg}`;
         
         console.log(`File directory: ${outdir}`);
         console.log(`File name: ${filename}`);
