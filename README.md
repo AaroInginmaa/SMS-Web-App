@@ -1,5 +1,5 @@
 # SMS Web App
-## Description
+## Kuvaus
 Node.js sovellus SMS viestien lähettämiseen käyttämällä [SMS Server Tools 3:a](http://smstools3.kekekasvi.com/).
 ## Asennus
 1. Asenna [Node.js](https://nodejs.org/en/download)
