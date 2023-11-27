@@ -69,21 +69,22 @@ function sendsms(phone, msg) {
         const filename = makeid(10);
         const filepath = outgoingDirectory + filename;
         const filecontents = `To: ${phone}\nAlphabet: ISO\n\n${msg}`;
+        let errorMessage;
 
         console.log(`File name: ${filename}`);
         console.log(`File directory: ${outgoingDirectory}`);
         console.log(`Full Path: ${filepath}`);
 
         if (!fs.existsSync(outgoingDirectory)) {
-            const errorMessage = `Directory ${outgoingDirectory} does not exist`;
-            console.error(errorMessage);
+            console.error(`Directory ${outgoingDirectory} does not exist`);
+            errorMessage = `Directory ${outgoingDirectory} does not exist`;
 
             reject(errorMessage);
             return;
         }
 
         if (phone == '' || msg == '') {
-            const errorMessage = "Empty phone number or message";
+            errorMessage = "Empty phone number or message";
             console.error(errorMessage);
             
             reject(errorMessage);
