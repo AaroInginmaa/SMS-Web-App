@@ -1,22 +1,16 @@
-# Web2SMS
+# SMS Web App
 ## Description
-A web app to send messages using [SMS Server Tools 3](http://smstools3.kekekasvi.com/).
-## Installation
-1. Install Node.js from https://nodejs.org/en/download
-2. Clone the project repository
-  - To clone the repository execute these 3 commands
+Verkko sovellus SMS viestien lähettämiseen käyttämällä [SMS Server Tools 3](http://smstools3.kekekasvi.com/).
+## Asennus
+1. Asenna [Node.js] (https://nodejs.org/en/download)
+2. Kloonaa github projekti
 ```
-mkdir yourdirectory
-cd yourdirectory
-git clone https://github.com/AaroInginmaa/Web2SMS.git
+mkdir kansio
+cd kansio
+git clone https://github.com/AaroInginmaa/SMS-Web-App.git
 ```
- 3. Navigate to the project folder and install Express
-  - while in the directory you made, install the Express framework using npm (npm should be installed along Node.js)
+ 3. Asenna Express.js kloonaamaasi projektiin
 ```
-cd yourDirectory/Web2SMS
+cd kansio/uusiKansio
 npm i express
-```
-To run the app the following command while in the project directory
-```
-node index.js
 ```
