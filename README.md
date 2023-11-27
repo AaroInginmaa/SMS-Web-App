@@ -2,7 +2,7 @@
 ## Description
 Verkko sovellus SMS viestien lähettämiseen käyttämällä [SMS Server Tools 3](http://smstools3.kekekasvi.com/).
 ## Asennus
-1. Asenna [Node.js] (https://nodejs.org/en/download)
+1. Asenna [Node.js](https://nodejs.org/en/download)
 2. Kloonaa github projekti
 ```
 mkdir kansio
