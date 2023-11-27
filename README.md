@@ -22,3 +22,4 @@ Jos haluat että sovellus toimii taustaprosessina, lue tämä [StackOverflow kys
 ## Käyttö
 Lähettääksesi viestin, syötä lomakkelle puhelinnumero ja haluamasi viesti, ja lopuksi paina lähetä nappia.
 Viestin lähettämisessä voi mennä hetki, vältä lähettämästä useampaa viestiä kerrallaan, saat ilmoituksen, jos viestisi on lähetetty.
+Sinun ei tarvitse lisätä ’+’ merkkiä ennen puhelinnumeroa.
