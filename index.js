@@ -132,7 +132,7 @@ function handleFileEvent(event, watchedFilename, filename, watcher, resolve) {
         console.log('---------------------------------------------------------');
         console.log(`File: ${filename}\nEvent: ${event}\nPath: ${sentDirectory}`);
         watcher.close(); // Close the watcher
-        resolve(`Message ${filename} sent`);
+        resolve(`Message sent`);
     }
     return;
 }
