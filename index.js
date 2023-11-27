@@ -1,6 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 const bodyParser = require('body-parser');
+const { format } = require('path');
 
 const app = express();
 const port = 80;
@@ -8,6 +9,9 @@ const host = "localhost";
 
 const outgoingDirectory = "/var/spool/sms/outgoing/";
 const sentDirectory = "/var/spool/sms/sent/";
+
+var date = new Date();
+var today = formatDate(date, 'dd-mm-yyyy');
 
 app.use(bodyParser.json());
 
@@ -45,6 +49,7 @@ app.post('/', (req, res) => {
 app.listen(port, () => {
     console.log('---------------------------------------------------------');
     console.log(`Server listening at http://${host}:${port}`);
+    console.log(today);
 });
 
 // Generate a random string with custom length
@@ -60,13 +65,24 @@ function makeid(length) {
     return result;
 }
 
+function formatDate(date, format) {
+    const map = {
+        dd: date.getDate(),
+        mm: date.getMonth() + 1,
+        yy: date.getFullYear().toString().slice(-2),
+        yyyy: date.getFullYear()
+    }
+
+    return format.replace(/mm|dd|yyyy|yy/gi, matched => map[matched])
+}
+
 // Send SMS function
 function sendsms(phone, msg) {
     return new Promise((resolve, reject) => {
         console.log('---------------------------------------------------------');
         console.log("Sending SMS...");
 
-        const filename = makeid(10);
+        const filename = today + '_' + makeid(10);
         const filepath = outgoingDirectory + filename;
         const filecontents = `To: ${phone}\nAlphabet: ISO\n\n${msg}`;
         let errorMessage;
