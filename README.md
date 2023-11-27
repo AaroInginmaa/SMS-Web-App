@@ -1,22 +1,24 @@
-# Web2SMS
+# SMS Web App
 ## Description
-A web app to send messages using [SMS Server Tools 3](http://smstools3.kekekasvi.com/).
-## Installation
-1. Install Node.js from https://nodejs.org/en/download
-2. Clone the project repository
-  - To clone the repository execute these 3 commands
+Node.js sovellus SMS viestien lähettämiseen käyttämällä [SMS Server Tools 3:a](http://smstools3.kekekasvi.com/).
+## Asennus
+1. Asenna [Node.js](https://nodejs.org/en/download)
+2. Kloonaa github projekti
 ```
-mkdir yourdirectory
-cd yourdirectory
-git clone https://github.com/AaroInginmaa/Web2SMS.git
+$ mkdir kansio
+$ cd kansio
+$ git clone https://github.com/AaroInginmaa/SMS-Web-App.git
 ```
- 3. Navigate to the project folder and install Express
-  - while in the directory you made, install the Express framework using npm (npm should be installed along Node.js)
+ 3. Asenna Express.js kloonaamaasi projektiin
 ```
-cd yourDirectory/Web2SMS
-npm i express
+$ cd kansio/SMS-Web-App
+$ npm i express
 ```
-To run the app the following command while in the project directory
+Voit käynnistää sovelluksen, käyttämällä seuraavan node komennon sovelluksen kansiossa
 ```
-node index.js
+$ node ./index.js
 ```
+Jos haluat että sovellus toimii taustaprosessina, lue tämä [StackOverflow kysymys](https://stackoverflow.com/questions/4018154/how-do-i-run-a-node-js-app-as-a-background-service)
+## Käyttö
+Lähettääksesi viestin, syötä lomakkelle puhelinnumero ja haluamasi viesti, ja lopuksi paina lähetä nappia.
+Viestin lähettämisessä voi mennä hetki, vältä lähettämästä useampaa viestiä kerrallaan, saat ilmoituksen, jos viestisi on lähetetty.
