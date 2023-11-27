@@ -1,7 +1,6 @@
 const express = require('express');
 const fs = require('fs');
 const bodyParser = require('body-parser');
-const { format } = require('path');
 
 const app = express();
 const port = 80;
