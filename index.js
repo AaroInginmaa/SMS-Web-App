@@ -10,10 +10,9 @@ const port = 80;
 const host = "localhost";
 
 const outgoingDirectory = "/var/spool/sms/outgoing/";
+const checkedDirectory = "/var/spool/sms/checked/";
 const sentDirectory = "/var/spool/sms/sent/";
 const failedDirectory = "/var/spool/sms/failed/";
-
-const dirs = [outgoingDirectory, sentDirectory, failedDirectory];
 
 var date = new Date();
 var today = formatDate(date, 'dd-mm-yyyy');
@@ -119,6 +118,10 @@ function sendsms(phone, msg) {
         const watcher2 = fs.watch(sentDirectory, (event, watchedFilename) => {
             sentCheck(event, watchedFilename, filename, watcher1, resolve);
         });
+
+        const watcher3 = fs.watch(checkedDirectory, (event, watchedFilename) => {
+            checkCheck(event, watchedFilename, filename, watcher1, resolve);
+        });
         
         try {
             fs.writeFileSync(filepath, filecontents);
@@ -148,5 +151,13 @@ function sentCheck(event, watchedFilename, filename, watcher) {
         console.log(`Message ${file} sent`);
         watcher.close();
         reject(`Message sent`);
+    }
+}
+
+function checkCheck(event, watchedFilename, filename, watcher) {
+    if (event === 'rename' && watchedFilename === filename) {
+        console.log(`Message ${file} checked`);
+        watcher.close();
+        reject(`Message checked`);
     }
 }
