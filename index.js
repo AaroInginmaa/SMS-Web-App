@@ -140,7 +140,7 @@ function sendsms(phone, msg) {
 
 function failedCheck(event, watchedFilename, filename, watcher) {
     if (event === 'rename' && watchedFilename === filename) {
-        console.log(`Failed to send message ${file}`);
+        console.log(`Failed to send message ${filename}`);
         watcher.close();
         reject(`Failed to send message`);
     }
@@ -148,7 +148,7 @@ function failedCheck(event, watchedFilename, filename, watcher) {
 
 function sentCheck(event, watchedFilename, filename, watcher) {
     if (event === 'rename' && watchedFilename === filename) {
-        console.log(`Message ${file} sent`);
+        console.log(`Message ${filename} sent`);
         watcher.close();
         reject(`Message sent`);
     }
@@ -156,7 +156,7 @@ function sentCheck(event, watchedFilename, filename, watcher) {
 
 function checkCheck(event, watchedFilename, filename, watcher) {
     if (event === 'rename' && watchedFilename === filename) {
-        console.log(`Message ${file} checked`);
+        console.log(`Message ${filename} checked`);
         watcher.close();
         reject(`Message checked`);
     }
