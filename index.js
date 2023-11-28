@@ -1,6 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 const bodyParser = require('body-parser');
+const { rejects } = require('assert');
 
 const app = express();
 const port = 80;
@@ -8,6 +9,7 @@ const host = "localhost";
 
 const outgoingDirectory = "/var/spool/sms/outgoing/";
 const sentDirectory = "/var/spool/sms/sent/";
+const failedDirectory = "/var/spool/sms/failed/";
 
 var date = new Date();
 var today = formatDate(date, 'dd-mm-yyyy');
@@ -112,7 +114,7 @@ function sendsms(phone, msg) {
 
             // Watch the checked directory for changes
             const watcher = fs.watch(sentDirectory, (event, watchedFilename) => {
-                handleFileEvent(event, watchedFilename, filename, watcher, resolve);
+                watchSent(event, watchedFilename, filename, watcher, resolve);
             });
 
             return;
@@ -126,8 +128,14 @@ function sendsms(phone, msg) {
 }
 
 // Handle file events for the watcher
-function handleFileEvent(event, watchedFilename, filename, watcher, resolve) {
-    if (event === 'rename' && watchedFilename === filename) {
+
+function watchSent(event, watchedFilename, filename, watcher, resolve) {
+    if (fs.existsSync(failedDirectory + filename) && !fs.existsSync(sentDirectory + filename)) {
+        watcher.close();
+        console.log(`Failed to send message ${filename}`);
+        reject(`Failed to send message ${filename}`);
+    }
+    else if (event === 'rename' && watchedFilename === filename) {
         console.log('---------------------------------------------------------');
         console.log(`File: ${filename}\nEvent: ${event}\nPath: ${sentDirectory}`);
         watcher.close(); // Close the watcher
