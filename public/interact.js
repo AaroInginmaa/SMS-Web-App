@@ -7,6 +7,7 @@ window.onload = function() {
 
 function send() {
     timeout(sendBtn, 5000);
+    if (!validatePN(document.getElementById('phone').value)) { return; }
 
     let data = {
         phone: document.getElementById('phone').value,
@@ -51,4 +52,16 @@ function timeout(obj, interval) {
     setTimeout(function() {
         obj.disabled = false;
     }, interval);
+}
+
+function validatePN(phone) {
+  let phoneno = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+
+  if (phone.match(phoneno)) {
+        return true;
+    }
+    else {
+        alert("Invalid phonenumber");
+        return false;
+    }
 }

@@ -112,9 +112,6 @@ function sendsms(phone, msg) {
             return;
         }
 
-        
-        
-        
         try {
             fs.writeFileSync(filepath, filecontents);
             console.log('File written successfully.');
