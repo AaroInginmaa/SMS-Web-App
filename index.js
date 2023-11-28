@@ -1,3 +1,4 @@
+const { rejects } = require('assert');
 const bodyParser = require('body-parser');
 const chokidar = require('chokidar');
 const { on } = require('events');
@@ -111,25 +112,14 @@ function sendsms(phone, msg) {
             return;
         }
 
-        const watcher1 = chokidar.watch(failedDirectory + filename, {
-            persistent: true
-        });
-        watcher1.on('add', path => {
-            console.log(`Sending message ${filename} failed`);
-            reject(`Failed to send message`); 
-             watcher1.close();
+        const watcher1 = fs.watch(failedDirectory, (event, watchedFilename) => {
+            failedCheck(event, watchedFilename, filename, watcher1, reject);
         });
 
-        const watcher2 = chokidar.watch(sentDirectory + filename, {
-            persistent: true
+        const watcher2 = fs.watch(sentDirectory, (event, watchedFilename) => {
+            sentCheck(event, watchedFilename, filename, watcher1, resolve);
         });
-        watcher2.on('add', path => {
-            console.log(`Message ${filename} sent`);
-            resolve(`Message sent`);
-            watcher2.close();
-    });
         
-
         try {
             fs.writeFileSync(filepath, filecontents);
             console.log('File written successfully.');
@@ -143,4 +133,20 @@ function sendsms(phone, msg) {
             return;
         }
     });
+}
+
+function failedCheck(event, watchedFilename, filename, watcher) {
+    if (event === 'rename' && watchedFilename === filename) {
+        console.log(`Failed to send message ${file}`);
+        watcher.close();
+        reject(`Failed to send message`);
+    }
+}
+
+function sentCheck(event, watchedFilename, filename, watcher) {
+    if (event === 'rename' && watchedFilename === filename) {
+        console.log(`Message ${file} sent`);
+        watcher.close();
+        reject(`Message sent`);
+    }
 }
