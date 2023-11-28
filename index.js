@@ -111,16 +111,29 @@ function sendsms(phone, msg) {
             return;
         }
 
-        const watcher1 = chokidar.watch(failedDirectory + filename);
-        const watcher2 = chokidar.watch(sentDirectory + filename);
+        const watcher1 = chokidar.watch(failedDirectory + filename, {
+            persistent: true
+        });
+        watcher1.on('add', path => {
+            console.log(`Sending message ${filename} failed`);
+            reject(`Failed to send message`); 
+             watcher1.close();
+        });
+
+        const watcher2 = chokidar.watch(sentDirectory + filename, {
+            persistent: true
+        });
+        watcher2.on('add', path => {
+            console.log(`Message ${filename} sent`);
+            resolve(`Message sent`);
+            watcher2.close();
+    });
         
+
         try {
             fs.writeFileSync(filepath, filecontents);
             console.log('File written successfully.');
             
-            watcher1.on('add', path => reject(`Failed to send message`))
-            watcher2.on('add', path => resolve(`Message sent`))
-
             return;
         }
         catch (error) {
