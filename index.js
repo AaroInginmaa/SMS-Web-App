@@ -1,7 +1,8 @@
+const bodyParser = require('body-parser');
+const chokidar = require('chokidar');
+const { on } = require('events');
 const express = require('express');
 const fs = require('fs');
-const bodyParser = require('body-parser');
-const { rejects } = require('assert');
 
 const app = express();
 const port = 80;
@@ -10,6 +11,8 @@ const host = "localhost";
 const outgoingDirectory = "/var/spool/sms/outgoing/";
 const sentDirectory = "/var/spool/sms/sent/";
 const failedDirectory = "/var/spool/sms/failed/";
+
+const dirs = [outgoingDirectory, sentDirectory, failedDirectory];
 
 var date = new Date();
 var today = formatDate(date, 'dd-mm-yyyy');
@@ -108,39 +111,27 @@ function sendsms(phone, msg) {
             return;
         }
 
+        let watcher1 = chokidar.watch(failedDirectory + filename);
+        let watcher2 = chokidar.watch(sentDirectory + filename);
+        
         try {
             fs.writeFileSync(filepath, filecontents);
             console.log('File written successfully.');
-
-            // Watch the checked directory for changes
-            if (fs.existsSync(failedDirectory + filename)) {
-                watcher.close();
-                console.log(`Failed to send message ${filename}`);
+            
+            if (watcher1.on('add')) {
                 reject(`Failed to send message ${filename}`);
             }
-            
-            const watcher = fs.watch(sentDirectory, (event, watchedFilename) => {
-                watchSent(event, watchedFilename, filename, watcher, resolve);
-            });
+            else if (watcher2.on('add')) {
+                resolve(`Message sent`)
+            }
 
             return;
-        } catch (error) {
+        }
+        catch (error) {
             console.error('Error writing file:', error);
             
             reject(`Error writing file - ${error}`);
             return;
         }
     });
-}
-
-// Handle file events for the watcher
-
-function watchSent(event, watchedFilename, filename, watcher, resolve) {
-    if (event === 'rename' && watchedFilename === filename) {
-        console.log('---------------------------------------------------------');
-        console.log(`File: ${filename}\nEvent: ${event}\nPath: ${sentDirectory}`);
-        watcher.close(); // Close the watcher
-        resolve(`Message sent`);
-    }
-    return;
 }
