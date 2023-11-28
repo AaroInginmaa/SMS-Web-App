@@ -1,6 +1,7 @@
 const { rejects } = require('assert');
 const bodyParser = require('body-parser');
 const chokidar = require('chokidar');
+const { error } = require('console');
 const { on } = require('events');
 const express = require('express');
 const fs = require('fs');
@@ -112,15 +113,15 @@ function sendsms(phone, msg) {
         }
 
         const watcher1 = fs.watch(failedDirectory, (event, watchedFilename) => {
-            failedCheck(event, watchedFilename, filename, watcher1, reject);
+            failedCheck(event, watchedFilename, filename, watcher1);
         });
 
         const watcher2 = fs.watch(sentDirectory, (event, watchedFilename) => {
-            sentCheck(event, watchedFilename, filename, watcher1, resolve);
+            sentCheck(event, watchedFilename, filename, watcher1);
         });
 
         const watcher3 = fs.watch(checkedDirectory, (event, watchedFilename) => {
-            checkCheck(event, watchedFilename, filename, watcher1, resolve);
+            checkCheck(event, watchedFilename, filename, watcher1);
         });
         
         try {
@@ -142,7 +143,7 @@ function failedCheck(event, watchedFilename, filename, watcher) {
     if (event === 'rename' && watchedFilename === filename) {
         console.log(`Failed to send message ${filename}`);
         watcher.close();
-        reject(`Failed to send message`);
+        throw new error;
     }
 }
 
@@ -150,7 +151,6 @@ function sentCheck(event, watchedFilename, filename, watcher) {
     if (event === 'rename' && watchedFilename === filename) {
         console.log(`Message ${filename} sent`);
         watcher.close();
-        reject(`Message sent`);
     }
 }
 
@@ -158,6 +158,5 @@ function checkCheck(event, watchedFilename, filename, watcher) {
     if (event === 'rename' && watchedFilename === filename) {
         console.log(`Message ${filename} checked`);
         watcher.close();
-        reject(`Message checked`);
     }
 }
