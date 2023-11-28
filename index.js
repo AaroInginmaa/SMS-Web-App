@@ -120,15 +120,15 @@ function sendsms(phone, msg) {
             console.log('File written successfully.');
             
             const watcherC = fs.watch(checkedDirectory, (event, watchedFilename) => {
-                checkCheck(event, watchedFilename, filename, watcher1);
+                checkCheck(event, watchedFilename, filename, watcherC);
             });
     
             const watcherF = fs.watch(failedDirectory, (event, watchedFilename) => {
-                failedCheck(event, watchedFilename, filename, watcher1, reject);
+                failedCheck(event, watchedFilename, filename, watcherF, reject);
             });
     
             const watcherS = fs.watch(sentDirectory, (event, watchedFilename) => {
-                sentCheck(event, watchedFilename, filename, watcher1, resolve);
+                sentCheck(event, watchedFilename, filename, watcherS, resolve);
             });
             
             return;
