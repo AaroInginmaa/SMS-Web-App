@@ -45,7 +45,7 @@ app.post('/', (req, res) => {
             res.json({ result });
         })
         .catch((error) => {
-            console.error('Failed to sending message');
+            console.error('Sending message failed');
             res.status(500).json({ error: `Error sending message - ${error}` });
         });
 });
