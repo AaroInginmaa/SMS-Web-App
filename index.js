@@ -113,6 +113,12 @@ function sendsms(phone, msg) {
             console.log('File written successfully.');
 
             // Watch the checked directory for changes
+            if (fs.existsSync(failedDirectory + filename)) {
+                watcher.close();
+                console.log(`Failed to send message ${filename}`);
+                reject(`Failed to send message ${filename}`);
+            }
+            
             const watcher = fs.watch(sentDirectory, (event, watchedFilename) => {
                 watchSent(event, watchedFilename, filename, watcher, resolve);
             });
@@ -130,12 +136,7 @@ function sendsms(phone, msg) {
 // Handle file events for the watcher
 
 function watchSent(event, watchedFilename, filename, watcher, resolve) {
-    if (fs.existsSync(failedDirectory + filename) && !fs.existsSync(sentDirectory + filename)) {
-        watcher.close();
-        console.log(`Failed to send message ${filename}`);
-        reject(`Failed to send message ${filename}`);
-    }
-    else if (event === 'rename' && watchedFilename === filename) {
+    if (event === 'rename' && watchedFilename === filename) {
         console.log('---------------------------------------------------------');
         console.log(`File: ${filename}\nEvent: ${event}\nPath: ${sentDirectory}`);
         watcher.close(); // Close the watcher
