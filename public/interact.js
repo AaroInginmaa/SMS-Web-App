@@ -6,7 +6,7 @@ window.onload = function() {
 }
 
 function send() {
-    timeout(sendBtn);
+    timeout(sendBtn, 5000);
 
     let data = {
         phone: document.getElementById('phone').value,
@@ -46,9 +46,9 @@ function send() {
     });
 }
 
-function timeout(obj) {
+function timeout(obj, interval) {
     obj.disabled = true;
     setTimeout(function() {
         obj.disabled = false;
-    }, 5000);
+    }, interval);
 }
