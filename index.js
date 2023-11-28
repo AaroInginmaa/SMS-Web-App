@@ -112,17 +112,19 @@ function sendsms(phone, msg) {
             return;
         }
 
-        const watcher1 = fs.watch(failedDirectory, (event, watchedFilename) => {
-            failedCheck(event, watchedFilename, filename, watcher1);
-        });
-
-        const watcher2 = fs.watch(sentDirectory, (event, watchedFilename) => {
-            sentCheck(event, watchedFilename, filename, watcher1);
-        });
-
-        const watcher3 = fs.watch(checkedDirectory, (event, watchedFilename) => {
+        const watcherC = fs.watch(checkedDirectory, (event, watchedFilename) => {
             checkCheck(event, watchedFilename, filename, watcher1);
         });
+        
+        const watcherF = fs.watch(failedDirectory, (event, watchedFilename) => {
+            failedCheck(event, watchedFilename, filename, watcher1, reject);
+        });
+
+        const watcherS = fs.watch(sentDirectory, (event, watchedFilename) => {
+            sentCheck(event, watchedFilename, filename, watcher1, resolve);
+        });
+
+
         
         try {
             fs.writeFileSync(filepath, filecontents);
@@ -139,18 +141,19 @@ function sendsms(phone, msg) {
     });
 }
 
-function failedCheck(event, watchedFilename, filename, watcher) {
+function failedCheck(event, watchedFilename, filename, watcher, reject) {
     if (event === 'rename' && watchedFilename === filename) {
         console.log(`Failed to send message ${filename}`);
         watcher.close();
-        throw new error;
+        reject(`Failed to send message`);
     }
 }
 
-function sentCheck(event, watchedFilename, filename, watcher) {
+function sentCheck(event, watchedFilename, filename, watcher, resolve) {
     if (event === 'rename' && watchedFilename === filename) {
         console.log(`Message ${filename} sent`);
         watcher.close();
+        resolve(`Message sent`);
     }
 }
 
