@@ -1,8 +1,4 @@
-const { rejects } = require('assert');
 const bodyParser = require('body-parser');
-const chokidar = require('chokidar');
-const { error } = require('console');
-const { on } = require('events');
 const express = require('express');
 const fs = require('fs');
 
@@ -54,7 +50,6 @@ app.post('/', (req, res) => {
 app.listen(port, () => {
     console.log('---------------------------------------------------------');
     console.log(`Server listening at http://${host}:${port}`);
-    console.log(today);
 });
 
 // Generate a random string with custom length
@@ -133,7 +128,7 @@ function sendsms(phone, msg) {
         catch (error) {
             console.error('Error writing file:', error);
             
-            reject(`Error writing file - ${error}`);
+            reject(`Error writing file: ${error}`);
             return;
         }
     });

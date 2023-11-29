@@ -7,7 +7,7 @@ window.onload = function() {
 
 function send() {
     timeout(sendBtn, 5000);
-    if (!validatePN(document.getElementById('phone').value)) { return; }
+    if (!validatePhone(document.getElementById('phone').value)) { return; }
 
     let data = {
         phone: document.getElementById('phone').value,
@@ -54,14 +54,14 @@ function timeout(obj, interval) {
     }, interval);
 }
 
-function validatePN(phone) {
-  let phoneno = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+function validatePhone(phone) {
+    let phoneno = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
 
-  if (phone.match(phoneno)) {
+    if (phone.match(phoneno)) {
         return true;
     }
     else {
-        alert("Invalid phonenumber");
+        alert("Invalid phone number!");
         return false;
     }
 }
