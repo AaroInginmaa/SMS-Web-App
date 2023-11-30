@@ -1,15 +1,16 @@
 const bodyParser = require('body-parser');
+const config = require('./config');
 const express = require('express');
 const fs = require('fs');
 
 const app = express();
-const port = 80;
-const host = "localhost";
+const port = config.server.port;
+const host = config.server.host;
 
-const outgoingDirectory = "/var/spool/sms/outgoing/";
-const checkedDirectory = "/var/spool/sms/checked/";
-const sentDirectory = "/var/spool/sms/sent/";
-const failedDirectory = "/var/spool/sms/failed/";
+const outgoingDirectory = config.directories.outgoing;
+const checkedDirectory = config.directories.checked;
+const sentDirectory = config.directories.sent;
+const failedDirectory = config.directories.failed;
 
 var date = new Date();
 var today = formatDate(date, 'dd-mm-yyyy');
@@ -82,7 +83,7 @@ function sendsms(phone, msg) {
         console.log('---------------------------------------------------------');
         console.log("Sending SMS...");
 
-        const filename = today + '_' + makeid(10);
+        const filename = today + '_' + makeid(config.message.idLength);
         const filepath = outgoingDirectory + filename;
         const filecontents = `To: ${phone}\nAlphabet: ISO\n\n${msg}`;
         let errorMessage;
@@ -93,9 +94,8 @@ function sendsms(phone, msg) {
 
         if (!fs.existsSync(outgoingDirectory)) {
             console.error(`Directory ${outgoingDirectory} does not exist`);
-            errorMessage = `Directory ${outgoingDirectory} does not exist`;
 
-            reject(errorMessage);
+            reject("Something went wrong on the server");
             return;
         }
 
@@ -128,7 +128,7 @@ function sendsms(phone, msg) {
         catch (error) {
             console.error('Error writing file:', error);
             
-            reject(`Error writing file: ${error}`);
+            reject(`Error writing file`);
             return;
         }
     });
@@ -140,6 +140,7 @@ function failedCheck(event, watchedFilename, filename, watcher, reject) {
         watcher.close();
         reject(`Failed to send message`);
     }
+    return false;
 }
 
 function sentCheck(event, watchedFilename, filename, watcher, resolve) {
@@ -148,6 +149,7 @@ function sentCheck(event, watchedFilename, filename, watcher, resolve) {
         watcher.close();
         resolve(`Message sent`);
     }
+    return false;
 }
 
 function checkCheck(event, watchedFilename, filename, watcher) {
@@ -155,4 +157,5 @@ function checkCheck(event, watchedFilename, filename, watcher) {
         console.log(`Message ${filename} checked`);
         watcher.close();
     }
+    return false;
 }
