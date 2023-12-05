@@ -16,7 +16,7 @@ $ npm i express
 ```
 Voit käynnistää sovelluksen, käyttämällä seuraavan node komennon sovelluksen kansiossa
 ```
-$ node ./index.js
+$ node ./server.js
 ```
 Jos haluat että sovellus toimii taustaprosessina, lue tämä [StackOverflow kysymys](https://stackoverflow.com/questions/4018154/how-do-i-run-a-node-js-app-as-a-background-service)
 ## Käyttö
