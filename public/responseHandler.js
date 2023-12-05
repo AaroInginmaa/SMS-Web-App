@@ -1,7 +1,9 @@
 let node = document.createElement("p");
-document.getElementById("status-message").appendChild(node);
-node.textContent = 'Sending message';
-node.setAttribute("class", "p-3 bg-warning bg-opacity-10 border border-warning rounded text-black");
+function createElement() {
+    document.getElementById("status-message").appendChild(node);
+    node.textContent = 'Sending message';
+    node.setAttribute("class", "p-3 bg-warning bg-opacity-10 border border-warning rounded text-black");
+}
 
 function handleResponse(result) {
     if (result['error']) {

@@ -7,6 +7,8 @@ window.onload = function() {
 
 function send() {
     timeout(sendBtn, 5000);
+    createElement();
+
     if (!validatePhone(document.getElementById('phone').value)) { return; }
 
     let data = {

@@ -14,8 +14,11 @@ fileInput.addEventListener("change", () => {
 });
 
 function send() {
+    createElement();
+    
 	finalData.msg = document.getElementById('msg').value;
 	console.log(`Phone numbers: ${finalData.phone}\nMessage: ${finalData.msg}`)
+
 
 	fetch('/', {
 	method: 'POST',
