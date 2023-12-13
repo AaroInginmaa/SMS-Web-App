@@ -8,17 +8,42 @@ const port = config.server.port;
 const host = config.server.host;
 
 app.use(bodyParser.json());
-
 app.use(express.static('public'));
 
-// Handle the root path
-app.get('/', (req, res) => {
-    console.log("GET request received for the root path.");
-    res.sendFile(__dirname + '/public/index.html');
+app.route('/')
+.get((req, res) => {
+        console.log('---------------------------------------------------------');
+        console.log(`${req.method} request received.`);
+        res.sendFile(__dirname + '/public/index.html');
+    })
+    .post((req, res) => {
+        console.log('---------------------------------------------------------');
+        console.log(`${req.method} request received`);
+        handlePost(req, res);
+    })
+    .put((req, res) => {
+        console.log('---------------------------------------------------------');
+        console.log(`${req.method} request received.`);
+        res.sendStatus(405)
+    })
+    .delete((req, res) => {
+        console.log('---------------------------------------------------------');
+        console.log(`${req.method} request received.`);
+        res.sendStatus(405)
+    })
+    .all((req, res) => {
+        console.log('---------------------------------------------------------');
+        console.log(`${req.method} request received.`);
+        res.sendStatus(403);
+    })
+
+// Start the server
+app.listen(port, () => {
+    console.log('---------------------------------------------------------');
+    console.log(`Server listening at http://${host}:${port}`);
 });
 
-app.post('/', (req, res) => {
-    console.log("POST request received.");
+function handlePost(req, res) {
 
     const receivedData = req.body;
     const { phone, msg } = req.body;
@@ -26,18 +51,12 @@ app.post('/', (req, res) => {
     console.log("Received data:", receivedData);
 
     send.sendsms(phone, msg)
-        .then(result => {
-            console.log("Message sent successfully:", result);
-            res.json({ result });
-        })
-        .catch((error) => {
-            console.error('Sending message failed');
-            res.status(500).json({ error: `Error sending message: ${error}` });
-        });
-});
-
-// Start the server
-app.listen(port, () => {
-    console.log('---------------------------------------------------------');
-    console.log(`Server listening at http://${host}:${port}`);
-});
+    .then(result => {
+        console.log("Message sent successfully:", result);
+        res.json({ result });
+    })
+    .catch((error) => {
+        console.error('Sending message failed');
+        res.status(500).json({ error: `Error sending message: ${error}` });
+    });
+}

@@ -5,6 +5,7 @@ const config =
         port: 80,
     },
     directories: {
+        test: "./test/",
         outgoing: "/var/spool/sms/outgoing/",
         checked: "/var/spool/sms/checked/",
         sent: "/var/spool/sms/sent/",
@@ -12,6 +13,7 @@ const config =
     },
     message: {
         idLength: 10,
+        alphabet: "UTF"
     }
 };
 

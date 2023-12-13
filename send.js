@@ -4,6 +4,17 @@ const fs = require('fs');
 var date = new Date();
 var today = formatDate(date, 'dd-mm-yyyy');
 
+function formatDate(date, format) {
+    const map = {
+        dd: date.getDate(),
+        mm: date.getMonth() + 1,
+        yy: date.getFullYear().toString().slice(-2),
+        yyyy: date.getFullYear()
+    }
+
+    return format.replace(/mm|dd|yyyy|yy/gi, matched => map[matched])
+}
+
 // Generate a random string with custom length
 function makeid(length) {
     let result = '';
@@ -17,35 +28,25 @@ function makeid(length) {
     return result;
 }
 
-function formatDate(date, format) {
-    const map = {
-        dd: date.getDate(),
-        mm: date.getMonth() + 1,
-        yy: date.getFullYear().toString().slice(-2),
-        yyyy: date.getFullYear()
-    }
-
-    return format.replace(/mm|dd|yyyy|yy/gi, matched => map[matched])
-}
-
 // Send SMS function
 function sendsms(phone, msg) {
     return new Promise((resolve, reject) => {
         console.log('---------------------------------------------------------');
         console.log("Sending SMS...");
+        console.log(phone);
 
         const filename = today + '_' + makeid(config.message.idLength);
-        const filepath = config.directories.outgoing + filename;
-        const filecontents = `To: ${phone}\nAlphabet: ISO\n\n${msg}`;
+        const filepath = config.directories.test + filename;
+        const filecontents = `To: ${phone}\nAlphabet: ${config.message.alphabet}\n\n${msg}`;
         
         let errorMessage;
 
         console.log(`File name: ${filename}`);
-        console.log(`File directory: ${config.directories.outgoing}`);
+        console.log(`File directory: ${config.directories.test}`);
         console.log(`Full Path: ${filepath}`);
 
-        if (!fs.existsSync(config.directories.outgoing)) {
-            console.error(`Directory ${config.directories.outgoing} does not exist`);
+        if (!fs.existsSync(config.directories.test)) {
+            console.error(`Directory ${config.directories.test} does not exist`);
 
             reject("Internal Server Error");
             return;
@@ -54,7 +55,7 @@ function sendsms(phone, msg) {
         if (phone == '' || msg == '') {
             errorMessage = "Empty phone number or message";
             console.error(errorMessage);
-            
+
             reject(errorMessage);
             return;
         }
@@ -62,25 +63,25 @@ function sendsms(phone, msg) {
         try {
             fs.writeFileSync(filepath, filecontents);
             console.log('File written successfully.');
-            
-            const watcherC = fs.watch(checkedDirectory, (event, watchedFilename) => {
+
+            const watcherC = fs.watch(config.directories.checked, (event, watchedFilename) => {
                 checkCheck(event, watchedFilename, filename, watcherC);
             });
-    
-            const watcherF = fs.watch(failedDirectory, (event, watchedFilename) => {
+
+            const watcherF = fs.watch(config.directories.failed, (event, watchedFilename) => {
                 failedCheck(event, watchedFilename, filename, watcherF, reject);
             });
     
-            const watcherS = fs.watch(sentDirectory, (event, watchedFilename) => {
+            const watcherS = fs.watch(config.directories.sent, (event, watchedFilename) => {
                 sentCheck(event, watchedFilename, filename, watcherS, resolve);
             });
-            
+
             return;
         }
         catch (error) {
-            console.error('Error writing file:', error);
-            
-            reject(`Error writing file`);
+            //console.error(error);
+
+            reject(`Internal Server Error`);
             return;
         }
     });

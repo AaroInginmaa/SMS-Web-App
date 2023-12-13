@@ -6,8 +6,7 @@ window.onload = function() {
 }
 
 function send() {
-    timeout(sendBtn, 5000);
-    createElement();
+    objTimeout(sendBtn, 5000);
 
     if (!validatePhone(document.getElementById('phone').value)) { return; }
 
@@ -16,7 +15,6 @@ function send() {
         msg: document.getElementById('msg').value
     };
     
-
     // Send the data to server via POST request
     fetch('/', {
         method: 'POST',
@@ -38,7 +36,7 @@ function send() {
     });
 }
 
-function timeout(obj, interval) {
+function objTimeout(obj, interval) {
     obj.disabled = true;
     setTimeout(function() {
         obj.disabled = false;
