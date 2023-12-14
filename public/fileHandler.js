@@ -16,7 +16,6 @@ fileInput.addEventListener("change", () => {
 
 function send() {
     for (let i = 0; i < finalData.phone.length; i++) {
-        createElement();
 
         finalData.msg = document.getElementById('msg').value;
         console.log(`Phone numbers: ${finalData.phone[i]}\nMessage: ${finalData.msg}`)
