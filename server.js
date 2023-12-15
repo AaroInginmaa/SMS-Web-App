@@ -10,37 +10,33 @@ const host = config.server.host;
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
+const line = '---------------------------------------------------------\n';
+
 app.route('/')
-.get((req, res) => {
-        console.log('---------------------------------------------------------');
-        console.log(`${req.method} request received.`);
+    .get((req, res) => {
+        console.log(`${line}${req.method} request received.`);
         res.sendFile(__dirname + '/public/index.html');
     })
     .post((req, res) => {
-        console.log('---------------------------------------------------------');
-        console.log(`${req.method} request received`);
+        console.log(`${line}${req.method} request received`);
         handlePost(req, res);
     })
     .put((req, res) => {
-        console.log('---------------------------------------------------------');
-        console.log(`${req.method} request received.`);
+        console.log(`${line}${req.method} request received.`);
         res.sendStatus(405)
     })
     .delete((req, res) => {
-        console.log('---------------------------------------------------------');
-        console.log(`${req.method} request received.`);
+        console.log(`${line}${req.method} request received.`);
         res.sendStatus(405)
     })
     .all((req, res) => {
-        console.log('---------------------------------------------------------');
-        console.log(`${req.method} request received.`);
+        console.log(`${line}${req.method} request received.`);
         res.sendStatus(403);
     })
 
 // Start the server
 app.listen(port, () => {
-    console.log('---------------------------------------------------------');
-    console.log(`Server listening at http://${host}:${port}`);
+    console.log(`${line}Server listening at http://${host}:${port}`);
 });
 
 app.once('error', function(err) {
