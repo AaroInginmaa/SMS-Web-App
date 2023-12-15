@@ -11,23 +11,25 @@ window.onload = () => {
 
 // Makes a POST request to server root where the phone number and message is handled and sent
 function send() {
-
+    
     let fileInput = document.getElementById('input');
     if (fileInput.files[0]) { return false;}
-
-    let node = document.createElement("p");
-        document.getElementById("status-message").appendChild(node);
-        node.innerHTML = `Sending message to ${finalData.phone[i]}`;
-        node.setAttribute("class", "p-3 bg-warning bg-opacity-10 border border-warning rounded text-black");
-
+    
     disableElementForInterval(sendBtn, 5000);
-
-    if (!validatePhone(phoneInput.value)) { return; }
 
     let data = {
         phone: phoneInput.value,
         msg: msgInput.value
     };
+
+    let node = document.createElement("p");
+        document.getElementById("status-message").appendChild(node);
+        node.innerHTML = `Sending message to ${phone}`;
+        node.setAttribute("class", "p-3 bg-warning bg-opacity-10 border border-warning rounded text-black");
+
+
+    if (!validatePhone(phoneInput.value)) { return; }
+
 
     fetch('/', {
         method: 'POST',
