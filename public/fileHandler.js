@@ -41,8 +41,6 @@ function send2() {
         })
         .then(response => response.json())
         .then(result => {
-            console.log(result);
-
             if (result['error']) {
                 node.innerHTML = result['error'];
                 node.setAttribute("class", "p-3 bg-danger bg-opacity-10 border border-danger rounded text-black");

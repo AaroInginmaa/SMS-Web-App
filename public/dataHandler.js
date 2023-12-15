@@ -15,6 +15,11 @@ function send() {
     let fileInput = document.getElementById('input');
     if (fileInput.files[0]) { return false;}
 
+    let node = document.createElement("p");
+        document.getElementById("status-message").appendChild(node);
+        node.innerHTML = `Sending message to ${finalData.phone[i]}`;
+        node.setAttribute("class", "p-3 bg-warning bg-opacity-10 border border-warning rounded text-black");
+
     disableElementForInterval(sendBtn, 5000);
 
     if (!validatePhone(phoneInput.value)) { return; }
@@ -33,7 +38,16 @@ function send() {
     })
     .then(response => response.json())
     .then(result => {
-        handleResponse(result)
+        if (result['error']) {
+            node.innerHTML = result['error'];
+            node.setAttribute("class", "p-3 bg-danger bg-opacity-10 border border-danger rounded text-black");
+            return;
+        }
+        else if (result['result']) {
+            node.innerHTML = result['result'];
+            node.setAttribute("class", "p-3 bg-success bg-opacity-10 border border-success rounded text-black");
+            return;
+        }
     })
     .catch(err =>{
         confirm.error(err);
