@@ -1,13 +1,13 @@
 var sendBtn, phoneInput, msgInput;
 
 // Initializes variables and sets up the event listener for sendBtn
-window.onload(() => {
+window.onload = () => {
     sendBtn = document.getElementById('submit');
     phoneInput = document.getElementById('phone');
     msgInput = document.getElementById('msg');
 
     sendBtn.addEventListener("click", send);
-})
+};
 
 // Makes a POST request to server root where the phone number and message is handled and sent
 function send() {
