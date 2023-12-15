@@ -14,7 +14,7 @@ function send() {
     
     let fileInput = document.getElementById('input');
     if (fileInput.files[0]) { return false;}
-    
+
     disableElementForInterval(sendBtn, 5000);
 
     let data = {
@@ -24,7 +24,7 @@ function send() {
 
     let node = document.createElement("p");
         document.getElementById("status-message").appendChild(node);
-        node.innerHTML = `Sending message to ${phone}`;
+        node.innerHTML = `Sending message to ${data.phone}`;
         node.setAttribute("class", "p-3 bg-warning bg-opacity-10 border border-warning rounded text-black");
 
 
