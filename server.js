@@ -43,6 +43,13 @@ app.listen(port, () => {
     console.log(`Server listening at http://${host}:${port}`);
 });
 
+app.once('error', function(err) {
+    if (err.code === 'EADDRINUSE') {
+        console.log(`Port ${port} already in use`);
+        process.exit();
+    }
+  });
+
 function handlePost(req, res) {
 
     const receivedData = req.body;
