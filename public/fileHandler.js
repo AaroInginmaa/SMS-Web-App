@@ -5,7 +5,7 @@ sendBtn2.addEventListener("click", send);
 let finalData = { };
 
 fileInput.addEventListener("change", () => {
-    let data = readFile()
+    let data = readFile(fileInput)
     data.then( (result) => {
         let parsed = parse(result, ',');
 
@@ -40,7 +40,7 @@ function send() {
         .then(response => response.json())
         .then(result => {
             console.log(result);
-            
+
             if (result['error']) {
                 node.innerHTML = result['error'];
                 node.setAttribute("class", "p-3 bg-danger bg-opacity-10 border border-danger rounded text-black");
@@ -58,36 +58,47 @@ function send() {
     }
 }
 
-function parse (data, delimiter) {
-    parsedData = data
-    .replaceAll(' ', '')
-    .replaceAll(/(\r\n|\n|\r)/gm, '')
-    .split(delimiter)
+function parse(csvText, delimiter) {
+    const lines = csvText.split('\n');
+    const result = [];
 
-    if (parsedData[parsedData.length - 1] == '') { parsedData.pop(); }
+    lines.forEach(line => {
+        const values = line.split(delimiter).map(value => {
+            // Remove leading and trailing whitespace
+            const trimmedValue = value.trim();
 
-    return parsedData;
+            // Remove escape sequences (e.g., double quotes around values)
+            return trimmedValue.replace(/^"(.*)"$/, '$1');
+        });
+
+        // Remove empty values and concatenate non-empty values to the result array
+        const nonEmptyValues = values.filter(value => value !== '');
+        result.push(...nonEmptyValues);
+    });
+
+    return result;
 }
 
-function readFile() {
+function readFile(fileInput) {
     return new Promise((resolve, reject) => {
+        const file = fileInput.files[0];
 
-        file = fileInput.files[0];
-
-        if (file) {
-            let reader = new FileReader();
-
-            reader.onload = (event) => {
-                resolve(String(event.target.result));
-            };
-            reader.onerror = (event) => {
-                reject(event);
-            }
-            reader.readAsText(file);
-        }
-        else {
+        if (!file) {
             console.log('No file selected');
+            reject(new Error('No file selected'));
             return;
         }
+
+        const reader = new FileReader();
+
+        reader.onload = (event) => {
+            resolve(String(event.target.result));
+        };
+
+        reader.onerror = (event) => {
+            reject(event);
+        };
+
+        reader.readAsText(file);
     });
 }

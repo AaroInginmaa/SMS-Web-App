@@ -1,20 +1,25 @@
-var sendBtn = document.getElementById('submit');
+var sendBtn, phoneInput, msgInput;
 
-window.onload = function() {
+// Initializes variables and sets up the event listener for sendBtn
+window.onload(() => {
     sendBtn = document.getElementById('submit');
+    phoneInput = document.getElementById('phone');
+    msgInput = document.getElementById('msg');
+
     sendBtn.addEventListener("click", send);
-}
+})
 
+// Makes a POST request to server root where the phone number and message is handled and sent
 function send() {
-    objTimeout(sendBtn, 5000);
+    disableElementForInterval(sendBtn, 5000);
 
-    if (!validatePhone(document.getElementById('phone').value)) { return; }
+    if (!validatePhone(phoneInput.value)) { return; }
 
     let data = {
-        phone: document.getElementById('phone').value,
-        msg: document.getElementById('msg').value
+        phone: phoneInput.value,
+        msg: msgInput.value
     };
-    
+
     fetch('/', {
         method: 'POST',
         headers: {
@@ -24,27 +29,26 @@ function send() {
     })
     .then(response => response.json())
     .then(result => {
-        console.log(result);
-
-        handleResponse(result);
-
+        handleResponse(result)
     })
-    .catch(error => {
-        console.error(error);
-    });
+    .catch(err =>{
+        confirm.error(err);
+    })
 }
 
-function objTimeout(obj, interval) {
-    obj.disabled = true;
+// Disables an element for an interval
+function disableElementForInterval(element, interval) {
+    element.disabled = true;
     setTimeout(function() {
-        obj.disabled = false;
+        element.disabled = false;
     }, interval);
 }
 
+// Validates given phone number
 function validatePhone(phone) {
-    let phoneno = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+    let phonenoPattern = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
 
-    if (phone.match(phoneno)) {
+    if (phone.match(phonenoPattern)) {
         return true;
     }
     else {

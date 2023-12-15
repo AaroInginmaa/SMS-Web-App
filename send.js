@@ -36,7 +36,7 @@ function sendsms(phone, msg) {
         console.log(phone);
 
         const filename = today + '_' + makeid(config.message.idLength);
-        const filepath = config.directories.outgoing + filename;
+        const filepath = `${config.directories.outgoing}/${filename}`;
         const filecontents = `To: ${phone}\nAlphabet: ${config.message.alphabet}\n\n${msg}`;
         
         let errorMessage;
@@ -53,9 +53,9 @@ function sendsms(phone, msg) {
         }
 
         if (phone == '' || msg == '') {
-            errorMessage = "Ei puhelinnumeroa tai viesstiä";
+            errorMessage = "Ei puhelinnumeroa tai viestiä";
+            
             console.error(errorMessage);
-
             reject(errorMessage);
             return;
         }
