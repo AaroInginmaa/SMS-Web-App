@@ -11,6 +11,10 @@ window.onload = () => {
 
 // Makes a POST request to server root where the phone number and message is handled and sent
 function send() {
+
+    let fileInput = document.getElementById('input');
+    if (fileInput.files[0]) { return false;}
+
     disableElementForInterval(sendBtn, 5000);
 
     if (!validatePhone(phoneInput.value)) { return; }
@@ -36,18 +40,10 @@ function send() {
     })
 }
 
-// Disables an element for an interval
-function disableElementForInterval(element, interval) {
-    element.disabled = true;
-    setTimeout(function() {
-        element.disabled = false;
-    }, interval);
-}
-
 // Validates given phone number
 function validatePhone(phone) {
     let phonenoPattern = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
-
+    
     if (phone.match(phonenoPattern)) {
         return true;
     }
@@ -55,4 +51,12 @@ function validatePhone(phone) {
         alert("Invalid phone number!");
         return false;
     }
+}
+
+// Disables an element for an interval
+function disableElementForInterval(element, interval) {
+    element.disabled = true;
+    setTimeout(function() {
+        element.disabled = false;
+    }, interval);
 }

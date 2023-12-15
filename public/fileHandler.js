@@ -1,6 +1,6 @@
 const fileInput = document.getElementById('input');
-const sendBtn2 = document.getElementById('submit2');
-sendBtn2.addEventListener("click", send);
+const sendBtn2 = document.getElementById('submit');
+sendBtn2.addEventListener("click", send2);
 
 let finalData = { };
 
@@ -14,7 +14,9 @@ fileInput.addEventListener("change", () => {
     });
 });
 
-function send() {
+function send2() {
+    if (!fileInput.files[0]) { return false;}
+
     for (let i = 0; i < finalData.phone.length; i++) {
 
         let node = document.createElement("p");
