@@ -57,6 +57,6 @@ function handlePost(req, res) {
     })
     .catch((error) => {
         console.error('Sending message failed');
-        res.status(500).json({ error: `Error sending message: ${error}` });
+        res.status(500).json({ error: `Viestin lähettämisessä numeroon ${phone} tapahtui virhe` });
     });
 }

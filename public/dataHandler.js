@@ -15,7 +15,6 @@ function send() {
         msg: document.getElementById('msg').value
     };
     
-    // Send the data to server via POST request
     fetch('/', {
         method: 'POST',
         headers: {
@@ -23,7 +22,6 @@ function send() {
         },
         body: JSON.stringify(data)
     })
-    // Handle the results
     .then(response => response.json())
     .then(result => {
         console.log(result);

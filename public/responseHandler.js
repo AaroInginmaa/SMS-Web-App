@@ -10,7 +10,7 @@ function handleResponse(result) {
         node.setAttribute("class", "p-3 bg-danger bg-opacity-10 border border-danger rounded text-black");
         return;
     }
-    else {
+    else if (result['result']) {
         node.innerHTML = result['result'];
         node.setAttribute("class", "p-3 bg-success bg-opacity-10 border border-success rounded text-black");
         return;

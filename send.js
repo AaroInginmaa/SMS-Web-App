@@ -36,24 +36,24 @@ function sendsms(phone, msg) {
         console.log(phone);
 
         const filename = today + '_' + makeid(config.message.idLength);
-        const filepath = config.directories.test + filename;
+        const filepath = config.directories.outgoing + filename;
         const filecontents = `To: ${phone}\nAlphabet: ${config.message.alphabet}\n\n${msg}`;
         
         let errorMessage;
 
         console.log(`File name: ${filename}`);
-        console.log(`File directory: ${config.directories.test}`);
+        console.log(`File directory: ${config.directories.outgoing}`);
         console.log(`Full Path: ${filepath}`);
 
-        if (!fs.existsSync(config.directories.test)) {
-            console.error(`Directory ${config.directories.test} does not exist`);
+        if (!fs.existsSync(config.directories.outgoing)) {
+            console.error(`Directory ${config.directories.outgoing} does not exist`);
 
-            reject("Internal Server Error");
+            reject("Palevilmella tapahtui virhe");
             return;
         }
 
         if (phone == '' || msg == '') {
-            errorMessage = "Empty phone number or message";
+            errorMessage = "Ei puhelinnumeroa tai viesstiä";
             console.error(errorMessage);
 
             reject(errorMessage);
@@ -69,11 +69,11 @@ function sendsms(phone, msg) {
             });
 
             const watcherF = fs.watch(config.directories.failed, (event, watchedFilename) => {
-                failedCheck(event, watchedFilename, filename, watcherF, reject);
+                failedCheck(event, watchedFilename, filename, watcherF, reject, phone);
             });
     
             const watcherS = fs.watch(config.directories.sent, (event, watchedFilename) => {
-                sentCheck(event, watchedFilename, filename, watcherS, resolve);
+                sentCheck(event, watchedFilename, filename, watcherS, resolve, phone);
             });
 
             return;
@@ -81,26 +81,26 @@ function sendsms(phone, msg) {
         catch (error) {
             //console.error(error);
 
-            reject(`Internal Server Error`);
+            reject(`Palevilmella tapahtui virhe`);
             return;
         }
     });
 }
 
-function failedCheck(event, watchedFilename, filename, watcher, reject) {
+function failedCheck(event, watchedFilename, filename, watcher, reject, phone) {
     if (event === 'rename' && watchedFilename === filename) {
         console.log(`Failed to send message ${filename}`);
         watcher.close();
-        reject(`Failed to send message`);
+        reject(`Viestin lähettäminen numeroon ${phone} epäonnistui`);
     }
     return false;
 }
 
-function sentCheck(event, watchedFilename, filename, watcher, resolve) {
+function sentCheck(event, watchedFilename, filename, watcher, resolve, phone) {
     if (event === 'rename' && watchedFilename === filename) {
         console.log(`Message ${filename} sent`);
         watcher.close();
-        resolve(`Message sent`);
+        resolve(`Viesti lähetetty numeroon ${phone}`);
     }
     return false;
 }
